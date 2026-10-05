@@ -5,13 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
 public class DeathServiceDataPage {
-    private  WebDriver driver;
-
+    private WebDriver driver;
+    private Wait wait;
     @FindBy(xpath = "//label[contains(text(),'Дата смерти')]/../following-sibling::input")
     private WebElement deathDate;
 
@@ -29,19 +29,18 @@ public class DeathServiceDataPage {
 
     public DeathServiceDataPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(deathDate));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(deathDate));
     }
 
-    public StatusPage deathServiceFillAndFinish (Application app) {
+    public StatusPage deathServiceFillAndFinish(Application app) {
         deathDate.sendKeys(app.getDeathDate());
         deathPlace.sendKeys(app.getDeathPlace());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(deathFinishButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(deathFinishButton));
         deathFinishButton.click();
         return new StatusPage(driver);
     }
-
 
 
     public DeathCitizenDataPage clickBack() {

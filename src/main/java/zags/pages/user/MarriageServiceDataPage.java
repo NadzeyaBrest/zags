@@ -5,14 +5,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
 
 public class MarriageServiceDataPage {
     private final WebDriver driver;
-
+    private Wait wait;
     @FindBy(xpath = "//label[text()='Дата регистрации']/../following-sibling::input")
     private WebElement marriageDate;
 
@@ -45,11 +45,12 @@ public class MarriageServiceDataPage {
 
     public MarriageServiceDataPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(marriageDate));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(marriageDate));
     }
 
-    public StatusPage marriageServiceFillAndFinish (Application app) {
+    public StatusPage marriageServiceFillAndFinish(Application app) {
         marriageDate.sendKeys(app.getMarriageDate());
         marriageNewLastName.sendKeys(app.getMarriageNewLastName());
         marriageSpouseLastName.sendKeys(app.getMarriageSpouseLastName());
@@ -57,8 +58,7 @@ public class MarriageServiceDataPage {
         marriageSpouseMiddleName.sendKeys(app.getMarriageSpouseMiddleName());
         marriageSpouseBirthDate.sendKeys(app.getMarriageSpouseBirthDate());
         marriageSpousePassport.sendKeys(app.getMarriageSpousePassport());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(marriageFinishButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(marriageFinishButton));
         marriageFinishButton.click();
         return new StatusPage(driver);
     }

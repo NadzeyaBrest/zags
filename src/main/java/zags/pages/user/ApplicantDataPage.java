@@ -5,12 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
 public class ApplicantDataPage {
     private WebDriver driver;
+    private Wait wait;
     @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
     private WebElement applicantLastName;
 
@@ -40,8 +41,7 @@ public class ApplicantDataPage {
         applicantPhone.sendKeys(app.getPersonalPhone());
         applicantPassport.sendKeys(app.getPersonalPassport());
         applicantAddress.sendKeys(app.getPersonalAddress());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(applicantPageNextButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(applicantPageNextButton));
 
         applicantPageNextButton.click();
         return new ServiceSelectionPage(driver);
@@ -55,7 +55,8 @@ public class ApplicantDataPage {
 
     public ApplicantDataPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(applicantFirstName));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(applicantFirstName));
     }
 }

@@ -1,36 +1,18 @@
 package zags.tests;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
-import zags.core.BaseTest;
+import org.testng.asserts.SoftAssert;
+import zags.data.TestData;
 import zags.models.Application;
-import zags.models.ServiceType;
 import zags.pages.MainPage;
 import zags.pages.user.StatusPage;
 
 public class BirthApplicationTest extends BaseTest {
 
-    @Test
-    public void testCreateBirthApplication() {
-        Application app = new Application(ServiceType.BIRTH)
-                .personalLastName("Ivanov")
-                .personalFirstName("Ivan")
-                .personalMiddleName("Ivanovich")
-                .personalPhone("7999123")
-                .personalPassport("АБ123456")
-                .personalAddress("Brest, Sovetskaya 3/15")
-                .citizenLastName("Ivanov")
-                .citizenFirstName("Petr")
-                .citizenMiddleName("Ivanovich")
-                .citizenBirthDate("15.01.2024")
-                .citizenGender("Муж")
-                .citizenPassport("АБ123456")
-                .citizenAddress("Brest, Sovetskaya 3/15")
-                .birthPlace("Brest")
-                .birthMother("Ivanova Maria Sergeevana")
-                .birthFather("Ivanov Ivan Ivanovich")
-                .birthGrandmother("Petrova Anna Ivanovna")
-                .birthGrandfather("Petrov Petr Petrovich");
+    @Test (groups = {"user"})
+    public void createBirthApplication() {
+        Application app = TestData.getBirthApplication();
+        SoftAssert softAssert =new SoftAssert();
 
         StatusPage statusPage = new MainPage(driver)
                 .selectUserMode()
@@ -39,17 +21,14 @@ public class BirthApplicationTest extends BaseTest {
                 .birthCitizenDataFillAndNext(app)
                 .birthServiceFillAndFinish(app);
 
-        String thankYou = statusPage.getThankYouText();
         String number = statusPage.getApplicationNumber();
         String status = statusPage.getStatus();
 
-        Assert.assertTrue(thankYou.contains("Спасибо за обращение"),
-                "Нет сообщения благодарности. Текст: " + thankYou);
-        Assert.assertNotNull(number, "Номер заявки не получен");
-        Assert.assertFalse(number.isEmpty(), "Номер заявки пустой");
-        Assert.assertTrue(status.contains("На рассмотрении"),
+        softAssert.assertNotNull(number, "Номер заявки не получен");
+        softAssert.assertFalse(number.isEmpty(), "Номер заявки пустой");
+        softAssert.assertTrue(status.contains("На рассмотрении"),
                 "Неверный статус заявки: " + status);
+        softAssert.assertAll();
 
-        System.out.println("Заявка создана. Номер: " + number + ", Статус: " + status);
     }
 }

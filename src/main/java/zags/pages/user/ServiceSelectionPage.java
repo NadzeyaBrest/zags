@@ -5,11 +5,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.pages.MainPage;
 
 public class ServiceSelectionPage {
     private WebDriver driver;
+    private Wait wait;
     @FindBy(xpath = "//button[contains(text(), 'брак')]")
     private WebElement marriageButton;
 
@@ -26,8 +27,9 @@ public class ServiceSelectionPage {
 
     public ServiceSelectionPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(marriageButton));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(marriageButton));
     }
 
     public ApplicantDataPage serviceSelectionBackClick() {
@@ -42,22 +44,19 @@ public class ServiceSelectionPage {
     }
 
     public MarriageCitizenDataPage selectMarriage() {
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(marriageButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(marriageButton));
         marriageButton.click();
         return new MarriageCitizenDataPage(driver);
     }
 
     public BirthCitizenDataPage selectBirth() {
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(birthButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(birthButton));
         birthButton.click();
         return new BirthCitizenDataPage(driver);
     }
 
     public DeathCitizenDataPage selectDeath() {
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(deathButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(deathButton));
         deathButton.click();
         return new DeathCitizenDataPage(driver);
 

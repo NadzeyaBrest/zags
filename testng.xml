@@ -1,0 +1,35 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="ZagsSuite" verbose="1">
+    <test name="User tests">
+        <groups>
+            <run>
+                <include name="user"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="zags.tests"/>
+        </packages>
+    </test>
+    <test name="Admin tests">
+        <groups>
+            <run>
+                <include name="admin"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="zags.tests"/>
+        </packages>
+    </test>
+    <test name="Cross-role tests">
+        <groups>
+            <run>
+                <include name="crossRole"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="zags.tests"/>
+        </packages>
+    </test>
+
+
+</suite>

@@ -5,12 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Admin;
 import zags.pages.MainPage;
 
 public class AdminRegistrationPage {
     private final WebDriver driver;
+    private  Wait wait;
 
     @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
     private WebElement adminLastName;
@@ -38,8 +39,9 @@ public class AdminRegistrationPage {
 
     public AdminRegistrationPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(adminLastName));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(adminLastName));
     }
 
     public AdminTablePage adminRegistrationFillAndNext(Admin admin) {
@@ -49,8 +51,7 @@ public class AdminRegistrationPage {
         adminPhone.sendKeys(admin.getPhone());
         adminPassport.sendKeys(admin.getPassportNumber());
         adminBirthDate.sendKeys(admin.getBirthDate());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(adminRegistrationNextButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(adminRegistrationNextButton));
         adminRegistrationNextButton.click();
         return new AdminTablePage(driver);
     }

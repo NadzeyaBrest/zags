@@ -1,11 +1,11 @@
-package zags.core;
+package zags.tests;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import zags.core.DriverManager;
 
-import java.time.Duration;
 
 public class BaseTest {
     protected WebDriver driver;
@@ -14,17 +14,19 @@ public class BaseTest {
     String password = dotenv.get("TEST_PASSWORD");
     String BASE_URL = dotenv.get("BASE_URL");
 
-    @BeforeMethod
+    @BeforeMethod (alwaysRun = true)
     public void setUp() {
+
         driver = DriverManager.getInstance().getDriver();
 
         driver.get("https://"
                 + username + ":" + password + BASE_URL);
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(5));
     }
 
-    @AfterMethod
-    public void ternDown() {
+    @AfterMethod (alwaysRun = true)
+
+    public void tearDown() {
+
         DriverManager.getInstance().closeDriver();
     }
 

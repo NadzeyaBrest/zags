@@ -6,40 +6,43 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.pages.MainPage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminTablePage {
     private WebDriver driver;
+    private Wait wait;
+
     @FindBy(xpath = "//table//tr[td]")
-    private List<WebElement> tableRows;
+    private List<WebElement> applicationRows;
     @FindBy(xpath = "//button[contains(text(),'Обновить')]")
     private WebElement adminTableRefreshButton;
     @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
     private WebElement adminTableCloseButton;
     @FindBy(xpath = "//b[contains(text(), 'Aдминистратор')]")
     private WebElement adminMode;
+    @FindBy(xpath = "//table//th")
+    private List<WebElement> tableHeaders;
 
     public AdminTablePage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(adminTableRefreshButton));
+
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(adminTableRefreshButton));
     }
 
     public String getMode() {
         return adminMode.getText().trim();
     }
 
-    public boolean isTableDisplayed() {
-        return !tableRows.isEmpty() && tableRows.get(0).isDisplayed();
-    }
-
-    public WebElement getRowById(String id) {
-        for (WebElement row : tableRows) {
-            String rowId = row.findElement(By.xpath("./td[1]")).getText().trim();
-            if (rowId.equals(id)) {
+    public WebElement getApplicationRowById(String id) {
+        for (WebElement row : applicationRows) {
+            String applicationId = row.findElement(By.xpath("./td[1]")).getText().trim();
+            if (applicationId.equals(id)) {
                 return row;
             }
         }
@@ -48,7 +51,7 @@ public class AdminTablePage {
     }
 
     public String getStatusById(String id) {
-        WebElement row = getRowById(id);
+        WebElement row = getApplicationRowById(id);
         if (row == null) {
             return null;
         }
@@ -56,39 +59,24 @@ public class AdminTablePage {
     }
 
     public String getTypeById(String id) {
-        WebElement row = getRowById(id);
+        WebElement row = getApplicationRowById(id);
         if (row == null) {
             return null;
         }
         return row.findElement(By.xpath("./td[3]")).getText().trim();
     }
 
-    public String getFirstId() {
-        DriverManager.getInstance().getWait().until(d -> !tableRows.isEmpty());
-        return tableRows.get(0).findElement(By.xpath("./td[1]")).getText().trim();
+    public String getIdLatestAppFromAdminTable() {
+        wait.seconds(2).until(d -> !applicationRows.isEmpty());
+        return applicationRows.get(0).findElement(By.xpath("./td[1]")).getText().trim();
     }
 
-    public void approveById(String id) {
-        WebElement row = getRowById(id);
-        if (row == null) return;
-
-        row.findElement(By.xpath("./td[6]//button[1]")).click();
-        DriverManager.getInstance().getWait().until(driver -> {
-            String currentStatus = getStatusById(id);
-            return "Одобрена".equals(currentStatus);
-        });
-    }
-
-    public void rejectById(String id) {
-        WebElement row = getRowById(id);
-        if (row != null) {
-            String statusBefore = getStatusById(id);
-            row.findElement(By.xpath("./td[6]//button[2]")).click();
-            DriverManager.getInstance().getWait().until(driver -> {
-                String currentStatus = getStatusById(id);
-                return "Одобрена".equals(currentStatus);
-            });
-        }
+    public List<String> getColumnHeaders() {
+        wait.seconds(2).until(d -> !tableHeaders.isEmpty());
+        return tableHeaders.stream()
+                .map(h -> h.getText().trim())
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
     }
 
     public AdminTablePage refresh() {

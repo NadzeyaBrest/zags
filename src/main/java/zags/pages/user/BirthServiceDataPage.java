@@ -4,13 +4,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
 public class BirthServiceDataPage {
     private final WebDriver driver;
-
+    private Wait wait;
     @FindBy(xpath = "//label[contains(text(),'Место рождения')]/../following-sibling::input")
     private WebElement birthPlace;
 
@@ -37,8 +37,9 @@ public class BirthServiceDataPage {
 
     public BirthServiceDataPage(WebDriver driver) {
         this.driver = driver;
+        this.wait=new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(birthPlace));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(birthPlace));
     }
 
     public StatusPage birthServiceFillAndFinish(Application app) {
@@ -47,8 +48,7 @@ public class BirthServiceDataPage {
         birthFather.sendKeys(app.getBirthFather());
         birthGrandmother.sendKeys(app.getBirthGrandmother());
         birthGrandfather.sendKeys(app.getBirthGrandfather());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(birthFinishButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(birthFinishButton));
         birthFinishButton.click();
         return new StatusPage(driver);
     }

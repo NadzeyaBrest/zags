@@ -5,12 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
 public class DeathCitizenDataPage {
     private WebDriver driver;
+    private Wait wait;
     @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
     private WebElement deathCitizenLastName;
 
@@ -39,8 +40,9 @@ public class DeathCitizenDataPage {
 
     public DeathCitizenDataPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(deathCitizenLastName));
+        wait.seconds(2).until(ExpectedConditions.visibilityOf(deathCitizenLastName));
     }
 
     public DeathServiceDataPage deathCitizenFillAndNext(Application app) {
@@ -51,8 +53,7 @@ public class DeathCitizenDataPage {
         deathCitizenGender.sendKeys(app.getCitizenGender());
         deathCitizenPassport.sendKeys(app.getCitizenPassport());
         deathCitizenAddress.sendKeys(app.getCitizenAddress());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(deathCitizenNextButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(deathCitizenNextButton));
         deathCitizenNextButton.click();
         return new DeathServiceDataPage(driver);
     }

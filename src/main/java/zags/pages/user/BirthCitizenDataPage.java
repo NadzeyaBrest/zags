@@ -5,12 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import zags.core.DriverManager;
+import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
 public class BirthCitizenDataPage {
     private final WebDriver driver;
+    private Wait wait;
     @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
     private WebElement birthCitizenLastName;
 
@@ -35,12 +36,13 @@ public class BirthCitizenDataPage {
     @FindBy(xpath = "//button[contains(text(), 'Закрыть')]")
     private WebElement birthCitizenCloseButton;
     @FindBy(xpath = "//button[contains(text(), 'Назад')]")
-    private WebElement birthCitizenBackButton;
+    private WebElement clickBack;
 
     public BirthCitizenDataPage(WebDriver driver) {
         this.driver = driver;
+        this.wait=new Wait(driver);
         PageFactory.initElements(driver, this);
-        DriverManager.getInstance().getWait().until(ExpectedConditions.visibilityOf(birthCitizenLastName));
+      wait.seconds(2).until(ExpectedConditions.visibilityOf(birthCitizenLastName));
     }
 
     public BirthServiceDataPage birthCitizenDataFillAndNext(Application app) {
@@ -51,15 +53,14 @@ public class BirthCitizenDataPage {
         birthCitizenGender.sendKeys(app.getCitizenGender());
         birthCitizenPassport.sendKeys(app.getCitizenPassport());
         birthCitizenAddress.sendKeys(app.getCitizenAddress());
-        DriverManager.getInstance().getWait()
-                .until(ExpectedConditions.elementToBeClickable(birthCitizenNextButton));
+        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(birthCitizenNextButton));
         birthCitizenNextButton.click();
         return new BirthServiceDataPage(driver);
 
     }
 
     public ServiceSelectionPage birthCitizenBackButton() {
-        birthCitizenBackButton.click();
+        clickBack.click();
         return new ServiceSelectionPage(driver);
 
     }
