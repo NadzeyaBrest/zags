@@ -1,5 +1,6 @@
 package zags.tests;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.data.TestData;
@@ -10,12 +11,19 @@ import zags.pages.admin.AdminTablePage;
 import zags.pages.user.StatusPage;
 
 public class AdminCheckApplicationTest extends BaseTest {
-    @Test (groups = {"crossRole"})
+
+    private MainPage mainPage;
+
+    @BeforeMethod (alwaysRun = true)
+    public void init() {
+        mainPage = new MainPage(driver);
+    }
+
+    @Test(groups = {"crossRole"})
     public void checkBirthApplicationByAdmin() {
         Application birthApp = TestData.getBirthApplication();
-        SoftAssert softAssert = new SoftAssert();
 
-        StatusPage statusPage = new MainPage(driver)
+        StatusPage statusPage = mainPage
                 .selectUserMode()
                 .applicantFillAndNext(birthApp)
                 .selectBirth()
@@ -24,8 +32,7 @@ public class AdminCheckApplicationTest extends BaseTest {
 
         String applicationNumberShowedUser = statusPage.getApplicationNumber();
         String applicationStatusShowedUser = statusPage.getStatus();
-
-        statusPage.clickCloseButton();
+        statusPage.clickStatusCloseButton();
         Admin admin = TestData.getAdmin();
 
         AdminTablePage adminTable = new MainPage(driver)
@@ -36,7 +43,7 @@ public class AdminCheckApplicationTest extends BaseTest {
         String idLatestAppFromAdminTable = adminTable.getIdLatestAppFromAdminTable();
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
         String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFromAdminTable);
-
+        SoftAssert softAssert = new SoftAssert();
         softAssert.assertFalse(applicationNumberShowedUser.isEmpty(), "ID новой заявки не отражается на странице Статуса заявки пользователя");
         softAssert.assertEquals(applicationNumberShowedUser, idLatestAppFromAdminTable, "Новая заявка не отразилась сверху таблицы");
         softAssert.assertFalse(idLatestAppFromAdminTable.isEmpty(), "ID новой заявки не отражается в таблице");
@@ -46,11 +53,11 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test (groups = {"crossRole"})
+    @Test(groups = {"crossRole"})
     public void checkMarriageApplicationByAdmin() {
         Application marriageApp = TestData.getMarriageApplication();
-        SoftAssert softAssert = new SoftAssert();
-        StatusPage marriageStatusPage = new MainPage(driver)
+
+        StatusPage marriageStatusPage = mainPage
                 .selectUserMode()
                 .applicantFillAndNext(marriageApp)
                 .selectMarriage()
@@ -58,7 +65,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .marriageServiceFillAndFinish(marriageApp);
         String applicationNumberShowedUser = marriageStatusPage.getApplicationNumber();
         String applicationStatusShowedUser = marriageStatusPage.getStatus();
-        marriageStatusPage.clickCloseButton();
+        marriageStatusPage.clickStatusCloseButton();
 
         Admin admin = TestData.getAdmin();
 
@@ -71,7 +78,7 @@ public class AdminCheckApplicationTest extends BaseTest {
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
         String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFromAdminTable);
 
-
+        SoftAssert softAssert = new SoftAssert();
         softAssert.assertFalse(applicationNumberShowedUser.isEmpty(), "ID новой заявки не отражается на странице Статуса заявки пользователя");
         softAssert.assertEquals(applicationNumberShowedUser, idLatestAppFromAdminTable, "Новая заявка не отразилась сверху таблицы");
         softAssert.assertFalse(idLatestAppFromAdminTable.isEmpty(), "ID новой заявки не отражается в таблице");
@@ -79,17 +86,16 @@ public class AdminCheckApplicationTest extends BaseTest {
                 "Тип заявки отличается от выбранной пользователем");
         softAssert.assertEquals(statusOfAppFromAdminTable, applicationStatusShowedUser, "Статус заявки в таблице администратора отличается от статуса заявки пользователя");
         softAssert.assertAll();
-        
 
 
     }
 
-    @Test (groups = {"crossRole"})
+    @Test(groups = {"crossRole"})
     public void checkDeathApplicationByAdmin() {
         Application deathApp = TestData.getDeathApplication();
-        SoftAssert softAssert = new SoftAssert();
-        
-        StatusPage deathStatusPage = new MainPage(driver)
+
+
+        StatusPage deathStatusPage = mainPage
                 .selectUserMode()
                 .applicantFillAndNext(deathApp)
                 .selectDeath()
@@ -97,19 +103,19 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .deathServiceFillAndFinish(deathApp);
         String applicationNumberShowedUser = deathStatusPage.getApplicationNumber();
         String applicationStatusShowedUser = deathStatusPage.getStatus();
-        deathStatusPage.clickCloseButton();
+        deathStatusPage.clickStatusCloseButton();
 
         Admin admin = TestData.getAdmin();
 
         AdminTablePage adminTable = new MainPage(driver)
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
-        
+
 
         String idLatestAppFomAdminTable = adminTable.getIdLatestAppFromAdminTable();
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFomAdminTable);
         String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFomAdminTable);
-
+        SoftAssert softAssert = new SoftAssert();
         softAssert.assertFalse(applicationNumberShowedUser.isEmpty(), "ID новой заявки не отражается на странице Статуса заявки пользователя");
         softAssert.assertEquals(applicationNumberShowedUser, idLatestAppFomAdminTable, "Новая заявка не отразилась сверху таблицы");
         softAssert.assertFalse(idLatestAppFomAdminTable.isEmpty(), "ID новой заявки не отражается в таблице");

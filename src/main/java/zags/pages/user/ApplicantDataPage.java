@@ -4,34 +4,29 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
+import static zags.pages.CommonLocators.*;
 
 public class ApplicantDataPage {
     private WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
+    @FindBy(xpath = LAST_NAME_INPUT)
     private WebElement applicantLastName;
-
-    @FindBy(xpath = "//label[text()='Имя']/../following-sibling::input")
+    @FindBy(xpath = FIRST_NAME_INPUT)
     private WebElement applicantFirstName;
-    @FindBy(xpath = "//label[text()='Отчество']/../following-sibling::input")
+    @FindBy(xpath = MIDDLE_NAME_INPUT)
     private WebElement applicantMiddleName;
-    @FindBy(xpath = "//label[text()='Телефон']/../following-sibling::input")
+    @FindBy(xpath = PHONE_INPUT)
     private WebElement applicantPhone;
-
-    @FindBy(xpath = "//label[text()='Номер паспорта']/../following-sibling::input")
+    @FindBy(xpath = PASSPORT_INPUT)
     private WebElement applicantPassport;
-
-    @FindBy(xpath = "//label[text()='Адрес прописки']/../following-sibling::input")
+    @FindBy(xpath = ADDRESS_INPUT)
     private WebElement applicantAddress;
-
-    @FindBy(xpath = "//button[contains(text(), 'Далее')]")
+    @FindBy(xpath = NEXT_BUTTON)
     private WebElement applicantPageNextButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON )
     private WebElement applicantPageCloseButton;
 
     public ServiceSelectionPage applicantFillAndNext(Application app) {
@@ -41,13 +36,12 @@ public class ApplicantDataPage {
         applicantPhone.sendKeys(app.getPersonalPhone());
         applicantPassport.sendKeys(app.getPersonalPassport());
         applicantAddress.sendKeys(app.getPersonalAddress());
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(applicantPageNextButton));
-
+        Wait.waitClickable(driver,applicantPageNextButton, Wait.SHORT_TIMEOUT);
         applicantPageNextButton.click();
         return new ServiceSelectionPage(driver);
     }
 
-    public MainPage clickClose() {
+    public MainPage clickApplicantButtonClose() {
         applicantPageCloseButton.click();
         return new MainPage(driver);
     }
@@ -55,8 +49,7 @@ public class ApplicantDataPage {
 
     public ApplicantDataPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(applicantFirstName));
+       Wait.waitVisibility(driver,applicantFirstName, Wait.SHORT_TIMEOUT);
     }
 }

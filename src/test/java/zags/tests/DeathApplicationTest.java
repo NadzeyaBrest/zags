@@ -6,12 +6,13 @@ import zags.data.TestData;
 import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.user.StatusPage;
+import static zags.data.Constants.*;
 
 public class DeathApplicationTest extends BaseTest {
     @Test (groups = {"user"})
-    public void createDeathApplication() {
+    public void checkCreateDeathApplication() {
         Application app = TestData.getDeathApplication();
-        SoftAssert softAssert =new SoftAssert();
+
         StatusPage deathStatusPage = new MainPage(driver)
                 .selectUserMode()
                 .applicantFillAndNext(app)
@@ -21,10 +22,10 @@ public class DeathApplicationTest extends BaseTest {
 
         String number = deathStatusPage.getApplicationNumber();
         String status = deathStatusPage.getStatus();
-
+        SoftAssert softAssert =new SoftAssert();
         softAssert.assertNotNull(number, "Номер заявки не получен");
         softAssert.assertFalse(number.isEmpty(), "Номер заявки пустой");
-        softAssert.assertTrue(status.contains("На рассмотрении"), "Неверный статус заявки: " + status);
+        softAssert.assertTrue(status.contains(STATUS_IN_PROGRESS), "Неверный статус заявки: " + status);
         softAssert.assertAll();
 
 

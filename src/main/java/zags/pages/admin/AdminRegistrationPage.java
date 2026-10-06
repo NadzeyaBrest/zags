@@ -4,44 +4,43 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.models.Admin;
 import zags.pages.MainPage;
 
+import static zags.pages.CommonLocators.*;
+
 public class AdminRegistrationPage {
     private final WebDriver driver;
-    private  Wait wait;
 
-    @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
+    @FindBy(xpath = LAST_NAME_INPUT)
     private WebElement adminLastName;
 
-    @FindBy(xpath = "//label[text()='Имя']/../following-sibling::input")
+    @FindBy(xpath = FIRST_NAME_INPUT )
     private WebElement adminFirstName;
 
-    @FindBy(xpath = "//label[text()='Отчество']/../following-sibling::input")
+    @FindBy(xpath = MIDDLE_NAME_INPUT )
     private WebElement adminMiddleName;
 
-    @FindBy(xpath = "//label[text()='Телефон']/../following-sibling::input")
+    @FindBy(xpath = PHONE_INPUT )
     private WebElement adminPhone;
 
-    @FindBy(xpath = "//label[text()='Номер паспорта']/../following-sibling::input")
+    @FindBy(xpath = PASSPORT_INPUT)
     private WebElement adminPassport;
 
-    @FindBy(xpath = "//label[text()='Дата рождения']/../following-sibling::input")
+    @FindBy(xpath = BIRTH_DATE_INPUT)
     private WebElement adminBirthDate;
 
-    @FindBy(xpath = "//button[contains(text(),'Далее')]")
+    @FindBy(xpath = NEXT_BUTTON)
     private WebElement adminRegistrationNextButton;
 
-    @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement adminRegistrationCloseButton;
 
     public AdminRegistrationPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(adminLastName));
+       Wait.waitVisibility(driver,adminLastName, Wait.SHORT_TIMEOUT) ;
     }
 
     public AdminTablePage adminRegistrationFillAndNext(Admin admin) {
@@ -51,7 +50,7 @@ public class AdminRegistrationPage {
         adminPhone.sendKeys(admin.getPhone());
         adminPassport.sendKeys(admin.getPassportNumber());
         adminBirthDate.sendKeys(admin.getBirthDate());
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(adminRegistrationNextButton));
+       Wait.waitClickable(driver,adminRegistrationNextButton,Wait.SHORT_TIMEOUT);
         adminRegistrationNextButton.click();
         return new AdminTablePage(driver);
     }

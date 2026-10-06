@@ -3,43 +3,35 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
+import static zags.pages.CommonLocators.*;
+
 public class BirthServiceDataPage {
     private final WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = "//label[contains(text(),'Место рождения')]/../following-sibling::input")
+    @FindBy(xpath = BIRTH_PLACE_INPUT)
     private WebElement birthPlace;
-
-    @FindBy(xpath = "//label[contains(text(),'Мать')]/../following-sibling::input")
+    @FindBy(xpath = BIRTH_MOTHER_INPUT )
     private WebElement birthMother;
-
-    @FindBy(xpath = "//label[contains(text(),'Отец')]/../following-sibling::input")
+    @FindBy(xpath = BIRTH_FATHER_INPUT)
     private WebElement birthFather;
-
-    @FindBy(xpath = "//label[contains(text(),'Бабушка')]/../following-sibling::input")
+    @FindBy(xpath = BIRTH_GRANDMOTHER_INPUT)
     private WebElement birthGrandmother;
-
-    @FindBy(xpath = "//label[contains(text(),'Дедушка')]/../following-sibling::input")
+    @FindBy(xpath = BIRTH_GRANDFATHER_INPUT)
     private WebElement birthGrandfather;
-
-    @FindBy(xpath = "//button[contains(text(),'Завершить')]")
+    @FindBy(xpath = FINISH_BUTTON)
     private WebElement birthFinishButton;
-
-    @FindBy(xpath = "//button[contains(text(),'Назад')]")
+    @FindBy(xpath = NEXT_BUTTON)
     private WebElement birthBackButton;
-
-    @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement birthCloseButton;
 
     public BirthServiceDataPage(WebDriver driver) {
         this.driver = driver;
-        this.wait=new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(birthPlace));
+        Wait.waitVisibility(driver,birthPlace,Wait.SHORT_TIMEOUT);
     }
 
     public StatusPage birthServiceFillAndFinish(Application app) {
@@ -48,18 +40,17 @@ public class BirthServiceDataPage {
         birthFather.sendKeys(app.getBirthFather());
         birthGrandmother.sendKeys(app.getBirthGrandmother());
         birthGrandfather.sendKeys(app.getBirthGrandfather());
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(birthFinishButton));
+        Wait.waitClickable(driver,birthFinishButton,Wait.SHORT_TIMEOUT);
         birthFinishButton.click();
         return new StatusPage(driver);
     }
 
-
-    public BirthCitizenDataPage clickBack() {
+    public BirthCitizenDataPage clickBirthServiceBackButton() {
         birthBackButton.click();
         return new BirthCitizenDataPage(driver);
     }
 
-    public MainPage clickClose() {
+    public MainPage clickBirthServiceCloseButton() {
         birthCloseButton.click();
         return new MainPage(driver);
     }

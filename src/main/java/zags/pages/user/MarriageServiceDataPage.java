@@ -4,50 +4,40 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
+import static zags.pages.CommonLocators.*;
+
 
 public class MarriageServiceDataPage {
     private final WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = "//label[text()='Дата регистрации']/../following-sibling::input")
+    @FindBy(xpath = MARRIAGE_DATE_INPUT)
     private WebElement marriageDate;
-
-    @FindBy(xpath = "//label[text()='Новая фамилия']/../following-sibling::input")
+    @FindBy(xpath = MARRIAGE_NEW_LAST_NAME_INPUT)
     private WebElement marriageNewLastName;
-
-    @FindBy(xpath = "//label[text()='Фамилия супруга/и']/../following-sibling::input")
+    @FindBy(xpath = MARRIAGE_SPOUSE_LAST_NAME_INPUT )
     private WebElement marriageSpouseLastName;
-
-    @FindBy(xpath = "//label[text()='Имя супруга/и']/../following-sibling::input")
+    @FindBy(xpath =  MARRIAGE_SPOUSE_FIRST_NAME_INPUT)
     private WebElement marriageSpouseFirstName;
-
-    @FindBy(xpath = "//label[text()='Отчество супруга/и']/../following-sibling::input")
+    @FindBy(xpath = MARRIAGE_SPOUSE_MIDDLE_NAME_INPUT)
     private WebElement marriageSpouseMiddleName;
-
-    @FindBy(xpath = "//label[text()='Дата рождения супруга/и']/../following-sibling::input")
+    @FindBy(xpath = MARRIAGE_SPOUSE_BIRTH_DATE_INPUT)
     private WebElement marriageSpouseBirthDate;
-
-    @FindBy(xpath = "//label[text()='Номер паспорта супруга/и']/../following-sibling::input")
+    @FindBy(xpath = MARRIAGE_SPOUSE_PASSPORT_INPUT)
     private WebElement marriageSpousePassport;
-
-    @FindBy(xpath = "//button[contains(text(),'Завершить')]")
+    @FindBy(xpath =  FINISH_BUTTON)
     private WebElement marriageFinishButton;
-
-    @FindBy(xpath = "//button[contains(text(),'Назад')]")
+    @FindBy(xpath = BACK_BUTTON)
     private WebElement marriageBackButton;
-
-    @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement marriageCloseButton;
 
     public MarriageServiceDataPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(marriageDate));
+        Wait.waitVisibility(driver,marriageDate,Wait.SHORT_TIMEOUT);
     }
 
     public StatusPage marriageServiceFillAndFinish(Application app) {
@@ -58,17 +48,17 @@ public class MarriageServiceDataPage {
         marriageSpouseMiddleName.sendKeys(app.getMarriageSpouseMiddleName());
         marriageSpouseBirthDate.sendKeys(app.getMarriageSpouseBirthDate());
         marriageSpousePassport.sendKeys(app.getMarriageSpousePassport());
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(marriageFinishButton));
+        Wait.waitClickable(driver,marriageFinishButton,Wait.SHORT_TIMEOUT);
         marriageFinishButton.click();
         return new StatusPage(driver);
     }
 
-    public MarriageCitizenDataPage clickBack() {
+    public MarriageCitizenDataPage clickMarriageServiceNextButton() {
         marriageBackButton.click();
         return new MarriageCitizenDataPage(driver);
     }
 
-    public MainPage clickClose() {
+    public MainPage clickMarriageServiceCloseButton() {
         marriageCloseButton.click();
         return new MainPage(driver);
     }

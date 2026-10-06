@@ -5,22 +5,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.pages.MainPage;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static zags.pages.CommonLocators.*;
+
 public class AdminTablePage {
     private WebDriver driver;
-    private Wait wait;
 
     @FindBy(xpath = "//table//tr[td]")
     private List<WebElement> applicationRows;
-    @FindBy(xpath = "//button[contains(text(),'Обновить')]")
+    @FindBy(xpath = REFRESH_BUTTON)
     private WebElement adminTableRefreshButton;
-    @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement adminTableCloseButton;
     @FindBy(xpath = "//b[contains(text(), 'Aдминистратор')]")
     private WebElement adminMode;
@@ -29,10 +29,15 @@ public class AdminTablePage {
 
     public AdminTablePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
+        Wait.waitVisibility(driver, adminTableRefreshButton, Wait.SHORT_TIMEOUT);
 
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(adminTableRefreshButton));
+    }
+
+    private String getCellText(WebElement row, int columnIndex) {
+        return row.findElement(By.xpath("./td[" + columnIndex + "]"))
+                .getText()
+                .trim();
     }
 
     public String getMode() {
@@ -41,7 +46,7 @@ public class AdminTablePage {
 
     public WebElement getApplicationRowById(String id) {
         for (WebElement row : applicationRows) {
-            String applicationId = row.findElement(By.xpath("./td[1]")).getText().trim();
+            String applicationId = getCellText(row, 1);
             if (applicationId.equals(id)) {
                 return row;
             }
@@ -55,7 +60,7 @@ public class AdminTablePage {
         if (row == null) {
             return null;
         }
-        return row.findElement(By.xpath("./td[5]")).getText().trim();
+        return getCellText(row, 5);
     }
 
     public String getTypeById(String id) {
@@ -63,16 +68,18 @@ public class AdminTablePage {
         if (row == null) {
             return null;
         }
-        return row.findElement(By.xpath("./td[3]")).getText().trim();
+        return getCellText(row, 3);
     }
 
     public String getIdLatestAppFromAdminTable() {
-        wait.seconds(2).until(d -> !applicationRows.isEmpty());
-        return applicationRows.get(0).findElement(By.xpath("./td[1]")).getText().trim();
+        Wait.createWait(driver, Wait.SHORT_TIMEOUT)
+                .until(d -> !applicationRows.isEmpty());
+        return getCellText(applicationRows.get(0), 1);
     }
 
     public List<String> getColumnHeaders() {
-        wait.seconds(2).until(d -> !tableHeaders.isEmpty());
+        Wait.createWait(driver, Wait.SHORT_TIMEOUT)
+                .until(d -> !tableHeaders.isEmpty());
         return tableHeaders.stream()
                 .map(h -> h.getText().trim())
                 .filter(s -> !s.isEmpty())
@@ -84,7 +91,7 @@ public class AdminTablePage {
         return this;
     }
 
-    public MainPage clickClose() {
+    public MainPage clickAdminTableClose() {
         adminTableCloseButton.click();
         return new MainPage(driver);
     }

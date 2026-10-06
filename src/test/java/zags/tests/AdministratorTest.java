@@ -1,5 +1,6 @@
 package zags.tests;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.data.TestData;
@@ -7,62 +8,59 @@ import zags.models.Admin;
 import zags.pages.MainPage;
 import zags.pages.admin.AdminTablePage;
 
+import static zags.data.Constants.*;
+
 import java.util.List;
 
 public class AdministratorTest extends BaseTest {
-    @Test(groups = {"admin"})
 
-    public void checkAdministratorMode() {
-        Admin admin = TestData.getAdmin();
-        SoftAssert softAssert = new SoftAssert();
+    AdminTablePage adminTable;
+    Admin admin;
 
-        AdminTablePage adminTable = new MainPage(driver)
+    @BeforeMethod (alwaysRun = true)
+    public void init() {
+        admin = TestData.getAdmin();
+        adminTable = new MainPage(driver)
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
+    }
 
+    @Test(groups = {"admin"})
+    public void checkAdministratorMode() {
+        ;
         String mode = adminTable.getMode();
-        softAssert.assertTrue(mode.contains("Aдминистратор"));
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(mode, ADMIN_ROLE);
         softAssert.assertAll();
     }
 
     @Test(enabled = false,
             groups = {"admin"}) //  заголовки не соответствуют ТЗ
     public void checkAdminTableColumnsByRequirements() {
-        Admin admin = TestData.getAdmin();
-        SoftAssert softAssert = new SoftAssert();
-
-        AdminTablePage adminTable = new MainPage(driver)
-                .selectAdminMode()
-                .adminRegistrationFillAndNext(admin);
 
         List<String> headers = adminTable.getColumnHeaders();
 
-        softAssert.assertTrue(headers.contains("№ заявки"), "Нет столбца '№ заявки'");
-        softAssert.assertTrue(headers.contains("Заявитель"), "Нет столбца 'Заявитель'");
-        softAssert.assertTrue(headers.contains("Вид услуги"), "Нет столбца 'Вид услуги'");
-        softAssert.assertTrue(headers.contains("Время"), "Нет столбца 'Время'");
-        softAssert.assertTrue(headers.contains("Статус"), "Нет столбца 'Статус'");
-        softAssert.assertTrue(headers.contains("Действие"), "Нет столбца 'Действие'");
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertTrue(headers.contains(COLUMN_APPLICATION_NUMBER), "Нет столбца " + COLUMN_APPLICATION_NUMBER);
+        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), "Нет столбца " + COLUMN_APPLICANT);
+        softAssert.assertTrue(headers.contains(COLUMN_SERVICE_TYPE), "Нет столбца " + COLUMN_SERVICE_TYPE);
+        softAssert.assertTrue(headers.contains(COLUMN_TIME), "Нет столбца " + COLUMN_TIME);
+        softAssert.assertTrue(headers.contains(COLUMN_STATUS), "Нет столбца " + COLUMN_STATUS);
+        softAssert.assertTrue(headers.contains(COLUMN_ACTION), "Нет столбца " + COLUMN_ACTION);
         softAssert.assertAll();
     }
 
     @Test(groups = {"admin"})
     public void checkAdminTableColumnsAsImplemented() {
-        Admin admin = TestData.getAdmin();
-        SoftAssert softAssert = new SoftAssert();
-
-        AdminTablePage adminTable = new MainPage(driver)
-                .selectAdminMode()
-                .adminRegistrationFillAndNext(admin);
 
         List<String> headers = adminTable.getColumnHeaders();
-
-        softAssert.assertTrue(headers.contains("№"), "Нет столбца '№ заявки'");
-        softAssert.assertTrue(headers.contains("Заявитель"), "Нет столбца 'Заявитель'");
-        softAssert.assertTrue(headers.contains("Тип"), "Нет столбца 'Тип '");
-        softAssert.assertTrue(headers.contains("Время"), "Нет столбца 'Время'");
-        softAssert.assertTrue(headers.contains("Статус"), "Нет столбца 'Статус'");
-        softAssert.assertTrue(headers.contains("Действие"), "Нет столбца 'Действие'");
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertTrue(headers.contains(COLUMN_NUMBER_AS_IMPLEMENTED), "Нет столбца " + COLUMN_NUMBER_AS_IMPLEMENTED);
+        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), "Нет столбца " + COLUMN_APPLICANT);
+        softAssert.assertTrue(headers.contains(COLUMN_TYPE_AS_IMPLEMENTED), "Нет столбца " + COLUMN_TYPE_AS_IMPLEMENTED);
+        softAssert.assertTrue(headers.contains(COLUMN_TIME), "Нет столбца " + COLUMN_TIME);
+        softAssert.assertTrue(headers.contains(COLUMN_STATUS), "Нет столбца " + COLUMN_STATUS);
+        softAssert.assertTrue(headers.contains(COLUMN_ACTION), "Нет столбца " + COLUMN_ACTION);
         softAssert.assertAll();
     }
 }

@@ -4,45 +4,41 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
+import static zags.pages.CommonLocators.*;
+
 public class BirthCitizenDataPage {
     private final WebDriver driver;
     private Wait wait;
-    @FindBy(xpath = "//label[text()='Фамилия']/../following-sibling::input")
+    @FindBy(xpath = LAST_NAME_INPUT)
     private WebElement birthCitizenLastName;
-
-    @FindBy(xpath = "//label[text()='Имя']/../following-sibling::input")
+    @FindBy(xpath = FIRST_NAME_INPUT)
     private WebElement birthCitizenFirstName;
-    @FindBy(xpath = "//label[text()='Отчество']/../following-sibling::input")
+    @FindBy(xpath = MIDDLE_NAME_INPUT )
     private WebElement birthCitizenMiddleName;
-    @FindBy(xpath = "//label[text()='Дата рождения']/../following-sibling::input")
+    @FindBy(xpath = BIRTH_DATE_INPUT)
     private WebElement birthCitizenBirthDate;
-    @FindBy(xpath = "//label[text()='Пол']/../following-sibling::input")
+    @FindBy(xpath = GENDER_INPUT )
     private WebElement birthCitizenGender;
-
-    @FindBy(xpath = "//label[text()='Номер паспорта']/../following-sibling::input")
+    @FindBy(xpath = PASSPORT_INPUT)
     private WebElement birthCitizenPassport;
-
-    @FindBy(xpath = "//label[text()='Адрес прописки']/../following-sibling::input")
+    @FindBy(xpath =  ADDRESS_INPUT)
     private WebElement birthCitizenAddress;
-
-    @FindBy(xpath = "//button[contains(text(), 'Далее')]")
+    @FindBy(xpath =NEXT_BUTTON)
     private WebElement birthCitizenNextButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement birthCitizenCloseButton;
-    @FindBy(xpath = "//button[contains(text(), 'Назад')]")
-    private WebElement clickBack;
+    @FindBy(xpath =BACK_BUTTON )
+    private WebElement birthCitizenButtonBack;
 
     public BirthCitizenDataPage(WebDriver driver) {
         this.driver = driver;
-        this.wait=new Wait(driver);
         PageFactory.initElements(driver, this);
-      wait.seconds(2).until(ExpectedConditions.visibilityOf(birthCitizenLastName));
+        Wait.waitVisibility(driver,birthCitizenLastName, Wait.SHORT_TIMEOUT);
     }
 
     public BirthServiceDataPage birthCitizenDataFillAndNext(Application app) {
@@ -53,19 +49,19 @@ public class BirthCitizenDataPage {
         birthCitizenGender.sendKeys(app.getCitizenGender());
         birthCitizenPassport.sendKeys(app.getCitizenPassport());
         birthCitizenAddress.sendKeys(app.getCitizenAddress());
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(birthCitizenNextButton));
+        Wait.waitClickable(driver,birthCitizenNextButton,Wait.SHORT_TIMEOUT);
         birthCitizenNextButton.click();
         return new BirthServiceDataPage(driver);
 
     }
 
-    public ServiceSelectionPage birthCitizenBackButton() {
-        clickBack.click();
+    public ServiceSelectionPage clickBirthCitizenBackButton() {
+        birthCitizenButtonBack.click();
         return new ServiceSelectionPage(driver);
 
     }
 
-    public MainPage clickClose() {
+    public MainPage clickBirthCitizenButtonClose() {
         birthCitizenCloseButton.click();
         return new MainPage(driver);
     }

@@ -7,12 +7,13 @@ import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.user.StatusPage;
 
+import static zags.data.Constants.STATUS_IN_PROGRESS;
+
 public class BirthApplicationTest extends BaseTest {
 
     @Test (groups = {"user"})
-    public void createBirthApplication() {
+    public void checkCreateBirthApplication() {
         Application app = TestData.getBirthApplication();
-        SoftAssert softAssert =new SoftAssert();
 
         StatusPage statusPage = new MainPage(driver)
                 .selectUserMode()
@@ -24,9 +25,10 @@ public class BirthApplicationTest extends BaseTest {
         String number = statusPage.getApplicationNumber();
         String status = statusPage.getStatus();
 
+        SoftAssert softAssert =new SoftAssert();
         softAssert.assertNotNull(number, "Номер заявки не получен");
         softAssert.assertFalse(number.isEmpty(), "Номер заявки пустой");
-        softAssert.assertTrue(status.contains("На рассмотрении"),
+        softAssert.assertTrue(status.contains(STATUS_IN_PROGRESS),
                 "Неверный статус заявки: " + status);
         softAssert.assertAll();
 

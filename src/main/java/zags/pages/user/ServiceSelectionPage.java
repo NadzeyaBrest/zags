@@ -4,59 +4,55 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.pages.MainPage;
 
+import static zags.pages.CommonLocators.*;
+
 public class ServiceSelectionPage {
     private WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = "//button[contains(text(), 'брак')]")
+    @FindBy(xpath =MARRIAGE_SERVICE_BUTTON)
     private WebElement marriageButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'рождения')]")
+    @FindBy(xpath =BIRTH_SERVICE_BUTTON)
     private WebElement birthButton;
-    @FindBy(xpath = "//button[contains(text(), 'смерти')]")
+    @FindBy(xpath =DEATH_SERVICE_BUTTON)
     private WebElement deathButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'Назад')]")
+    @FindBy(xpath = BACK_BUTTON)
     private WebElement serviceSectionPageBackButton;
-
-    @FindBy(xpath = "//button[contains(text(), 'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement serviceSectionPageCloseButton;
 
     public ServiceSelectionPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(marriageButton));
+        Wait.waitVisibility(driver,marriageButton,Wait.SHORT_TIMEOUT);
     }
 
-    public ApplicantDataPage serviceSelectionBackClick() {
+    public ApplicantDataPage clickServiceSelectionBackButton() {
         serviceSectionPageBackButton.click();
         return new ApplicantDataPage(driver);
 
     }
 
-    public MainPage serviceSelectionClickClose() {
+    public MainPage clickServiceSelectionCloseButton() {
         serviceSectionPageCloseButton.click();
         return new MainPage(driver);
     }
 
     public MarriageCitizenDataPage selectMarriage() {
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(marriageButton));
+        Wait.waitClickable(driver,marriageButton,Wait.SHORT_TIMEOUT);
         marriageButton.click();
         return new MarriageCitizenDataPage(driver);
     }
 
     public BirthCitizenDataPage selectBirth() {
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(birthButton));
+        Wait.waitClickable(driver,birthButton,Wait.SHORT_TIMEOUT);
         birthButton.click();
         return new BirthCitizenDataPage(driver);
     }
 
     public DeathCitizenDataPage selectDeath() {
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(deathButton));
+        Wait.waitClickable(driver,deathButton,Wait.SHORT_TIMEOUT);
         deathButton.click();
         return new DeathCitizenDataPage(driver);
 

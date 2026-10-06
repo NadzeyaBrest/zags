@@ -7,11 +7,12 @@ import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.user.StatusPage;
 
+import static zags.data.Constants.*;
+
 public class MarriageApplicationTest extends BaseTest {
-    @Test (groups = {"user"})
-    public void createMarriageApplication() {
+    @Test(groups = {"user"})
+    public void checkCreateMarriageApplication() {
         Application app = TestData.getMarriageApplication();
-        SoftAssert softAssert = new SoftAssert();
 
         StatusPage marriageStatusPage = new MainPage(driver)
                 .selectUserMode()
@@ -20,12 +21,12 @@ public class MarriageApplicationTest extends BaseTest {
                 .marriageCitizenFillAndNext(app)
                 .marriageServiceFillAndFinish(app);
 
-
+        SoftAssert softAssert = new SoftAssert();
         String number = marriageStatusPage.getApplicationNumber();
         String status = marriageStatusPage.getStatus();
         softAssert.assertNotNull(number, "Номер заявки не получен");
         softAssert.assertFalse(number.isEmpty(), "Номер заявки пустой");
-        softAssert.assertTrue(status.contains("На рассмотрении"),
+        softAssert.assertTrue(status.contains(STATUS_IN_PROGRESS),
                 "Неверный статус заявки: " + status);
         softAssert.assertAll();
     }

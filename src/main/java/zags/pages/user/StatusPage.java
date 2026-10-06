@@ -4,33 +4,33 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.pages.MainPage;
+
+import static zags.pages.CommonLocators.*;
 
 
 public class StatusPage {
     private WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = "//span[contains(text(),'Спасибо за обращение')]")
-    private WebElement textThankYou;
-    @FindBy(xpath = "//span[contains(text(),'Ваша заявка №')]")
+    @FindBy(xpath = THANK_YOU_TEXT)
+    private WebElement  textThankYou;
+    @FindBy(xpath = APPLICATION_NUMBER_TEXT)
     private WebElement statusApplicationNumberText;
-    @FindBy(xpath = "//span[contains(text(), 'Статус заявки:')]")
+    @FindBy(xpath = STATUS_VALUE_TEXT)
     private WebElement statusValueText;
-    @FindBy(xpath = "//button[contains(text(),'Создать новую заявку')]")
+    @FindBy(xpath = CREATE_NEW_APPLICATION_BUTTON )
     private WebElement statusCreateNewButton;
-    @FindBy(xpath = "//button[contains(text(),'Обновить')]")
+    @FindBy(xpath = REFRESH_BUTTON )
     private WebElement statusRefreshButton;
-    @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement statusCloseButton;
 
-    public MainPage clickCloseButton() {
+    public MainPage clickStatusCloseButton() {
         statusCloseButton.click();
         return new MainPage(driver);
     }
 
-    public void clickCreateNew() {
+    public void clickCreateNewButton() {
         statusCreateNewButton.click();
     }
 
@@ -52,9 +52,8 @@ public class StatusPage {
 
     public StatusPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(textThankYou));
+        Wait.waitVisibility(driver,textThankYou,Wait.SHORT_TIMEOUT);
     }
 
 

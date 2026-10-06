@@ -4,51 +4,46 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
+import static zags.pages.CommonLocators.*;
+
 public class DeathServiceDataPage {
     private WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = "//label[contains(text(),'Дата смерти')]/../following-sibling::input")
+    @FindBy(xpath = DEATH_DATE_INPUT )
     private WebElement deathDate;
-
-    @FindBy(xpath = "//label[contains(text(),'Место смерти')]/../following-sibling::input")
+    @FindBy(xpath = DEATH_PLACE_INPUT )
     private WebElement deathPlace;
-
-    @FindBy(xpath = "//button[contains(text(),'Завершить')]")
+    @FindBy(xpath = FINISH_BUTTON )
     private WebElement deathFinishButton;
-
-    @FindBy(xpath = "//button[contains(text(),'Назад')]")
+    @FindBy(xpath = BACK_BUTTON)
     private WebElement deathBackButton;
-
-    @FindBy(xpath = "//button[contains(text(),'Закрыть')]")
+    @FindBy(xpath = CLOSE_BUTTON)
     private WebElement deathCloseButton;
 
     public DeathServiceDataPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new Wait(driver);
         PageFactory.initElements(driver, this);
-        wait.seconds(2).until(ExpectedConditions.visibilityOf(deathDate));
+        Wait.waitVisibility(driver,deathDate,Wait.SHORT_TIMEOUT);
     }
 
     public StatusPage deathServiceFillAndFinish(Application app) {
         deathDate.sendKeys(app.getDeathDate());
         deathPlace.sendKeys(app.getDeathPlace());
-        wait.seconds(2).until(ExpectedConditions.elementToBeClickable(deathFinishButton));
+        Wait.waitClickable(driver,deathFinishButton,Wait.SHORT_TIMEOUT);
         deathFinishButton.click();
         return new StatusPage(driver);
     }
 
 
-    public DeathCitizenDataPage clickBack() {
+    public DeathCitizenDataPage clickDeathServiceBackButton() {
         deathBackButton.click();
         return new DeathCitizenDataPage(driver);
     }
 
-    public MainPage clickClose() {
+    public MainPage clickDeathServiceCloseButton() {
         deathCloseButton.click();
         return new MainPage(driver);
     }
