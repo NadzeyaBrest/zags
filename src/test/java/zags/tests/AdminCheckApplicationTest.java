@@ -1,5 +1,8 @@
 package zags.tests;
 
+import io.qameta.allure.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -10,17 +13,25 @@ import zags.pages.MainPage;
 import zags.pages.admin.AdminTablePage;
 import zags.pages.user.StatusPage;
 
-public class AdminCheckApplicationTest extends BaseTest {
 
+@Epic("Кросс-ролевые сценарии")
+@Feature("Проверка заявок администратором")
+public class AdminCheckApplicationTest extends BaseTest {
+    private static final Logger log = LogManager.getLogger(AdminCheckApplicationTest.class);
     private MainPage mainPage;
 
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void init() {
         mainPage = new MainPage(driver);
     }
 
     @Test(groups = {"crossRole"})
+    @Story("Админ проверяет заявку на рождение")
+    @Description("Пользователь создаёт заявку на рождение, админ  проверяет, " +
+            "что заявка появилась в таблице с корректным типом и статусом")
+    @Severity(SeverityLevel.BLOCKER)
     public void checkBirthApplicationByAdmin() {
+        log.info( "Кросс-роль тест: рождение");
         Application birthApp = TestData.getBirthApplication();
 
         StatusPage statusPage = mainPage
@@ -54,7 +65,11 @@ public class AdminCheckApplicationTest extends BaseTest {
     }
 
     @Test(groups = {"crossRole"})
+    @Story("Админ проверяет заявку на брак")
+    @Description("Пользователь создаёт заявку на брак, админ  проверяет её в таблице")
+    @Severity(SeverityLevel.BLOCKER)
     public void checkMarriageApplicationByAdmin() {
+        log.info(" Кросс-роль тест: брак ");
         Application marriageApp = TestData.getMarriageApplication();
 
         StatusPage marriageStatusPage = mainPage
@@ -91,7 +106,11 @@ public class AdminCheckApplicationTest extends BaseTest {
     }
 
     @Test(groups = {"crossRole"})
+    @Story("Админ проверяет заявку на смерть")
+    @Description("Пользователь создаёт заявку на смерть, админ проверяет её в таблице")
+    @Severity(SeverityLevel.BLOCKER)
     public void checkDeathApplicationByAdmin() {
+        log.info("--- Кросс-роль тест: рождение ---");
         Application deathApp = TestData.getDeathApplication();
 
 

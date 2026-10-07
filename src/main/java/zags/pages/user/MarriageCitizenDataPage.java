@@ -1,5 +1,8 @@
 package zags.pages.user;
 
+import io.qameta.allure.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,6 +14,7 @@ import zags.pages.MainPage;
 import static zags.pages.CommonLocators.*;
 
 public class MarriageCitizenDataPage {
+    private static final Logger log = LogManager.getLogger(BirthCitizenDataPage.class);
     private WebDriver driver;
     @FindBy(xpath = LAST_NAME_INPUT)
     private WebElement marriageCitizenLastName;
@@ -36,10 +40,12 @@ public class MarriageCitizenDataPage {
     public MarriageCitizenDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        log.info("Открыта страница данных гражданина (брак)");
         Wait.waitVisibility(driver,marriageCitizenLastName,Wait.SHORT_TIMEOUT);
     }
-
+    @Step("Заполнить данные гражданина для рождения и нажать Далее")
     public MarriageServiceDataPage marriageCitizenFillAndNext(Application app) {
+        log.info("Заполняем данные гражданина (брак)");
         marriageCitizenLastName.sendKeys(app.getCitizenLastName());
         marriageCitizenFirstName.sendKeys(app.getCitizenFirstName());
         marriageCitizenMiddleName.sendKeys(app.getCitizenMiddleName());
@@ -49,6 +55,7 @@ public class MarriageCitizenDataPage {
         marriageCitizenAddress.sendKeys(app.getCitizenAddress());
         Wait.waitClickable(driver,marriageCitizenNextButton,Wait.SHORT_TIMEOUT);
         marriageCitizenNextButton.click();
+        log.info("Данные гражданина (брак) отправлены");
         return new MarriageServiceDataPage(driver);
     }
     public ServiceSelectionPage clickMarriageCitizenBackButton() {

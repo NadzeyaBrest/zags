@@ -1,5 +1,9 @@
 package zags.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -12,12 +16,14 @@ import static zags.data.Constants.*;
 
 import java.util.List;
 
+@Epic("Панель администратора")
+@Feature("Просмотр таблицы заявок")
 public class AdministratorTest extends BaseTest {
 
     AdminTablePage adminTable;
     Admin admin;
 
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void init() {
         admin = TestData.getAdmin();
         adminTable = new MainPage(driver)
@@ -25,6 +31,8 @@ public class AdministratorTest extends BaseTest {
                 .adminRegistrationFillAndNext(admin);
     }
 
+    @Story("Проверка роли администратора")
+    @Description("Проверяем, что после выбора роли администратор в шапке отображается роль Администратор")
     @Test(groups = {"admin"})
     public void checkAdministratorMode() {
         ;
@@ -34,8 +42,9 @@ public class AdministratorTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(enabled = false,
-            groups = {"admin"}) //  заголовки не соответствуют ТЗ
+    @Test(groups = {"admin"}, enabled = false) //  заголовки не соответствуют ТЗ
+    @Story("Проверка заголовков таблицы по ТЗ")
+    @Description("Проверяем, что заголовки колонок таблицы соответствуют требованиям ТЗ")
     public void checkAdminTableColumnsByRequirements() {
 
         List<String> headers = adminTable.getColumnHeaders();
@@ -51,8 +60,8 @@ public class AdministratorTest extends BaseTest {
     }
 
     @Test(groups = {"admin"})
+    @Story("Проверка фактических заголовков таблицы")
     public void checkAdminTableColumnsAsImplemented() {
-
         List<String> headers = adminTable.getColumnHeaders();
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(headers.contains(COLUMN_NUMBER_AS_IMPLEMENTED), "Нет столбца " + COLUMN_NUMBER_AS_IMPLEMENTED);

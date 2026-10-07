@@ -1,5 +1,7 @@
 package zags.pages.admin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,6 +13,8 @@ import zags.pages.MainPage;
 import static zags.pages.CommonLocators.*;
 
 public class AdminRegistrationPage {
+    private static final Logger log = LogManager.getLogger(AdminRegistrationPage.class);
+
     private final WebDriver driver;
 
     @FindBy(xpath = LAST_NAME_INPUT)
@@ -40,10 +44,12 @@ public class AdminRegistrationPage {
     public AdminRegistrationPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        log.info("Открыта форма регистрации администратора");
        Wait.waitVisibility(driver,adminLastName, Wait.SHORT_TIMEOUT) ;
     }
 
     public AdminTablePage adminRegistrationFillAndNext(Admin admin) {
+        log.info("Заполняем форму администратора: {} {}", admin.getLastName(), admin.getFirstName());
         adminLastName.sendKeys(admin.getLastName());
         adminFirstName.sendKeys(admin.getFirstName());
         adminMiddleName.sendKeys(admin.getMiddleName());

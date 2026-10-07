@@ -1,5 +1,8 @@
 package zags.pages.user;
 
+import io.qameta.allure.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,6 +15,7 @@ import static zags.pages.CommonLocators.*;
 
 
 public class MarriageServiceDataPage {
+    private static final Logger log = LogManager.getLogger(BirthCitizenDataPage.class);
     private final WebDriver driver;
     @FindBy(xpath = MARRIAGE_DATE_INPUT)
     private WebElement marriageDate;
@@ -37,10 +41,12 @@ public class MarriageServiceDataPage {
     public MarriageServiceDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        log.info("Открыта страница данных услуги (брак)");
         Wait.waitVisibility(driver,marriageDate,Wait.SHORT_TIMEOUT);
     }
-
+    @Step("Заполнить данные о втором супруге и нажать  Завершить")
     public StatusPage marriageServiceFillAndFinish(Application app) {
+        log.info("Заполняем данные об услуге (брак)");
         marriageDate.sendKeys(app.getMarriageDate());
         marriageNewLastName.sendKeys(app.getMarriageNewLastName());
         marriageSpouseLastName.sendKeys(app.getMarriageSpouseLastName());
@@ -50,6 +56,7 @@ public class MarriageServiceDataPage {
         marriageSpousePassport.sendKeys(app.getMarriageSpousePassport());
         Wait.waitClickable(driver,marriageFinishButton,Wait.SHORT_TIMEOUT);
         marriageFinishButton.click();
+        log.info("Отправляем данные об услуге (брак)");
         return new StatusPage(driver);
     }
 

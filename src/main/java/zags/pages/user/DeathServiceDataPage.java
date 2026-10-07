@@ -1,5 +1,8 @@
 package zags.pages.user;
 
+import io.qameta.allure.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,6 +14,7 @@ import zags.pages.MainPage;
 import static zags.pages.CommonLocators.*;
 
 public class DeathServiceDataPage {
+    private static final Logger log = LogManager.getLogger(BirthCitizenDataPage.class);
     private WebDriver driver;
     @FindBy(xpath = DEATH_DATE_INPUT )
     private WebElement deathDate;
@@ -26,14 +30,17 @@ public class DeathServiceDataPage {
     public DeathServiceDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        log.info("Открыта страница данных услуги (смерть)");
         Wait.waitVisibility(driver,deathDate,Wait.SHORT_TIMEOUT);
     }
-
+    @Step("Заполнить данные о месте и дате смерти и нажать Завершить")
     public StatusPage deathServiceFillAndFinish(Application app) {
+        log.info("Заполняем данные об услуге (смерть)");
         deathDate.sendKeys(app.getDeathDate());
         deathPlace.sendKeys(app.getDeathPlace());
         Wait.waitClickable(driver,deathFinishButton,Wait.SHORT_TIMEOUT);
         deathFinishButton.click();
+        log.info("Данные услуги (смерть) отправлены");
         return new StatusPage(driver);
     }
 

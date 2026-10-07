@@ -1,5 +1,11 @@
 package zags.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.data.TestData;
@@ -9,11 +15,17 @@ import zags.pages.user.StatusPage;
 
 import static zags.data.Constants.*;
 
+@Epic("Пользовательские заявки")
+@Feature("Создание заявки на брак")
 public class MarriageApplicationTest extends BaseTest {
+    private static final Logger log = LogManager.getLogger(AdministratorTest.class);
+
     @Test(groups = {"user"})
+    @Story("Пользователь создаёт заявку на брак")
+    @Description("Проверяем создание заявки на брак: заполнение всех форм и получение номера со статусом")
     public void checkCreateMarriageApplication() {
         Application app = TestData.getMarriageApplication();
-
+        log.info("--- Тест: создание заявки на брак ---");
         StatusPage marriageStatusPage = new MainPage(driver)
                 .selectUserMode()
                 .applicantFillAndNext(app)

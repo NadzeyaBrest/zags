@@ -1,5 +1,6 @@
 package zags.tests;
 
+import io.qameta.allure.*;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.data.TestData;
@@ -9,10 +10,17 @@ import zags.pages.user.StatusPage;
 
 import static zags.data.Constants.STATUS_IN_PROGRESS;
 
+@Epic("Пользовательские заявки")
+@Feature("Создание заявки на рождение")
 public class BirthApplicationTest extends BaseTest {
 
-    @Test (groups = {"user"})
+    @Test(groups = {"user"})
+    @Story("Пользователь создаёт заявку на рождение")
+    @Description("Проверяем, что пользователь может заполнить все формы заявки на рождение " +
+            "и после завершения видит номер заявки и статус 'На рассмотрении'")
+    @Severity(SeverityLevel.CRITICAL)
     public void checkCreateBirthApplication() {
+        log.info("--- Тест: создание заявки на рождение ---");
         Application app = TestData.getBirthApplication();
 
         StatusPage statusPage = new MainPage(driver)
@@ -25,7 +33,7 @@ public class BirthApplicationTest extends BaseTest {
         String number = statusPage.getApplicationNumber();
         String status = statusPage.getStatus();
 
-        SoftAssert softAssert =new SoftAssert();
+        SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(number, "Номер заявки не получен");
         softAssert.assertFalse(number.isEmpty(), "Номер заявки пустой");
         softAssert.assertTrue(status.contains(STATUS_IN_PROGRESS),
