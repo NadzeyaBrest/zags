@@ -38,3 +38,15 @@ build/
 .DS_Store
 
 .env
+# Allure
+.allure/
+allure-results/
+allure-report/
+target/allure-results/
+target/allure-report/
+target/site/allure-maven-plugin/
+
+
+# Logs
+logs/
+*.log
