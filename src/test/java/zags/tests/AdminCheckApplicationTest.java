@@ -41,6 +41,7 @@ public class AdminCheckApplicationTest extends BaseTest {
 
 
         String idLatestAppFromAdminTable = adminTable.getIdLatestAppFromAdminTable();
+
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
         String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFromAdminTable);
         SoftAssert softAssert = new SoftAssert();

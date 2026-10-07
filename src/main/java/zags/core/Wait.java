@@ -8,9 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class Wait {
-    public static final long SHORT_TIMEOUT = 2;
-    public static final long MEDIUM_TIMEOUT = 5;
-    public static final long LONG_TIMEOUT = 10;
+
 
     private Wait() {
     }

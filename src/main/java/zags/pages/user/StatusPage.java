@@ -7,22 +7,28 @@ import org.openqa.selenium.support.PageFactory;
 import zags.core.Wait;
 import zags.pages.MainPage;
 
-import static zags.pages.CommonLocators.*;
+import static zags.core.Constants.APPLICATION_NUMBER;
+import static zags.core.Constants.CLOSE;
+import static zags.core.Constants.CREATE_NEW_APPLICATION;
+import static zags.core.Constants.REFRESH;
+import static zags.core.Constants.SHORT_TIMEOUT;
+import static zags.core.Constants.STATUS_VALUE;
+import static zags.core.Constants.THANK_YOU;
 
 
 public class StatusPage {
     private WebDriver driver;
-    @FindBy(xpath = THANK_YOU_TEXT)
+    @FindBy(xpath =  "//span[contains(text(),'" + THANK_YOU + "')]")
     private WebElement  textThankYou;
-    @FindBy(xpath = APPLICATION_NUMBER_TEXT)
+    @FindBy(xpath = "//span[contains(text(),'" + APPLICATION_NUMBER + "')]")
     private WebElement statusApplicationNumberText;
-    @FindBy(xpath = STATUS_VALUE_TEXT)
+    @FindBy(xpath = "//span[contains(text(),'" + STATUS_VALUE + "')]")
     private WebElement statusValueText;
-    @FindBy(xpath = CREATE_NEW_APPLICATION_BUTTON )
+    @FindBy(xpath = "//button[contains(text(),'" + CREATE_NEW_APPLICATION + "')]")
     private WebElement statusCreateNewButton;
-    @FindBy(xpath = REFRESH_BUTTON )
+    @FindBy(xpath = "//button[contains(text(),'" + REFRESH + "')]")
     private WebElement statusRefreshButton;
-    @FindBy(xpath = CLOSE_BUTTON)
+    @FindBy(xpath ="//button[contains(text(),'" + CLOSE + "')]")
     private WebElement statusCloseButton;
 
     public MainPage clickStatusCloseButton() {
@@ -53,7 +59,7 @@ public class StatusPage {
     public StatusPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        Wait.waitVisibility(driver,textThankYou,Wait.SHORT_TIMEOUT);
+        Wait.waitVisibility(driver,textThankYou,SHORT_TIMEOUT);
     }
 
 

@@ -8,25 +8,36 @@ import org.openqa.selenium.support.PageFactory;
 import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
-import static zags.pages.CommonLocators.*;
+
+
+import static zags.core.Constants.ADDRESS;
+import static zags.core.Constants.CLOSE;
+import static zags.core.Constants.FIRST_NAME;
+import static zags.core.Constants.LAST_NAME;
+import static zags.core.Constants.MIDDLE_NAME;
+import static zags.core.Constants.NEXT;
+import static zags.core.Constants.PASSPORT;
+import static zags.core.Constants.PHONE;
+import static zags.core.Constants.SHORT_TIMEOUT;
 
 public class ApplicantDataPage {
     private WebDriver driver;
-    @FindBy(xpath = LAST_NAME_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + LAST_NAME + "')]/../following-sibling::input")
     private WebElement applicantLastName;
-    @FindBy(xpath = FIRST_NAME_INPUT)
+    @FindBy(xpath ="//label[contains(text(),'" + FIRST_NAME + "')]/../following-sibling::input")
     private WebElement applicantFirstName;
-    @FindBy(xpath = MIDDLE_NAME_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + MIDDLE_NAME + "')]/../following-sibling::input")
     private WebElement applicantMiddleName;
-    @FindBy(xpath = PHONE_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + PHONE + "')]/../following-sibling::input")
     private WebElement applicantPhone;
-    @FindBy(xpath = PASSPORT_INPUT)
+    @FindBy(xpath ="//label[contains(text(),'" + PASSPORT + "')]/../following-sibling::input")
     private WebElement applicantPassport;
-    @FindBy(xpath = ADDRESS_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + ADDRESS  + "')]/../following-sibling::input")
     private WebElement applicantAddress;
-    @FindBy(xpath = NEXT_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + NEXT + "')]")
     private WebElement applicantPageNextButton;
-    @FindBy(xpath = CLOSE_BUTTON )
+
+    @FindBy(xpath = "//button[contains(text(),'" + CLOSE + "')]")
     private WebElement applicantPageCloseButton;
 
     public ServiceSelectionPage applicantFillAndNext(Application app) {
@@ -36,7 +47,7 @@ public class ApplicantDataPage {
         applicantPhone.sendKeys(app.getPersonalPhone());
         applicantPassport.sendKeys(app.getPersonalPassport());
         applicantAddress.sendKeys(app.getPersonalAddress());
-        Wait.waitClickable(driver,applicantPageNextButton, Wait.SHORT_TIMEOUT);
+        Wait.waitClickable(driver,applicantPageNextButton, SHORT_TIMEOUT);
         applicantPageNextButton.click();
         return new ServiceSelectionPage(driver);
     }
@@ -50,6 +61,6 @@ public class ApplicantDataPage {
     public ApplicantDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-       Wait.waitVisibility(driver,applicantFirstName, Wait.SHORT_TIMEOUT);
+       Wait.waitVisibility(driver,applicantFirstName, SHORT_TIMEOUT);
     }
 }

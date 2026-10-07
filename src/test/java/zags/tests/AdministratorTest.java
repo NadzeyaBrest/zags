@@ -1,5 +1,6 @@
 package zags.tests;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -17,8 +18,8 @@ public class AdministratorTest extends BaseTest {
     AdminTablePage adminTable;
     Admin admin;
 
-    @BeforeMethod (alwaysRun = true)
-    public void init() {
+    @BeforeMethod(alwaysRun = true)
+    public void openAdminTable () {
         admin = TestData.getAdmin();
         adminTable = new MainPage(driver)
                 .selectAdminMode()
@@ -27,11 +28,8 @@ public class AdministratorTest extends BaseTest {
 
     @Test(groups = {"admin"})
     public void checkAdministratorMode() {
-        ;
         String mode = adminTable.getMode();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(mode, ADMIN_ROLE);
-        softAssert.assertAll();
+        Assert.assertEquals(mode, ADMIN_ROLE);
     }
 
     @Test(enabled = false,
@@ -41,12 +39,12 @@ public class AdministratorTest extends BaseTest {
         List<String> headers = adminTable.getColumnHeaders();
 
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertTrue(headers.contains(COLUMN_APPLICATION_NUMBER), "Нет столбца " + COLUMN_APPLICATION_NUMBER);
-        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), "Нет столбца " + COLUMN_APPLICANT);
-        softAssert.assertTrue(headers.contains(COLUMN_SERVICE_TYPE), "Нет столбца " + COLUMN_SERVICE_TYPE);
-        softAssert.assertTrue(headers.contains(COLUMN_TIME), "Нет столбца " + COLUMN_TIME);
-        softAssert.assertTrue(headers.contains(COLUMN_STATUS), "Нет столбца " + COLUMN_STATUS);
-        softAssert.assertTrue(headers.contains(COLUMN_ACTION), "Нет столбца " + COLUMN_ACTION);
+        softAssert.assertTrue(headers.contains(COLUMN_APPLICATION_NUMBER), String.format("Нет столбца %s", COLUMN_APPLICATION_NUMBER));
+        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), String.format("Нет столбца %s", COLUMN_ACTION));
+        softAssert.assertTrue(headers.contains(COLUMN_SERVICE_TYPE),String.format("Нет столбца %s", COLUMN_SERVICE_TYPE));
+        softAssert.assertTrue(headers.contains(COLUMN_TIME), String.format("Нет столбца %s", COLUMN_TIME));
+        softAssert.assertTrue(headers.contains(COLUMN_STATUS),String.format("Нет столбца %s", COLUMN_STATUS));
+        softAssert.assertTrue(headers.contains(COLUMN_ACTION),String.format("Нет столбца %s", COLUMN_ACTION));
         softAssert.assertAll();
     }
 
@@ -55,12 +53,12 @@ public class AdministratorTest extends BaseTest {
 
         List<String> headers = adminTable.getColumnHeaders();
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertTrue(headers.contains(COLUMN_NUMBER_AS_IMPLEMENTED), "Нет столбца " + COLUMN_NUMBER_AS_IMPLEMENTED);
-        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), "Нет столбца " + COLUMN_APPLICANT);
-        softAssert.assertTrue(headers.contains(COLUMN_TYPE_AS_IMPLEMENTED), "Нет столбца " + COLUMN_TYPE_AS_IMPLEMENTED);
-        softAssert.assertTrue(headers.contains(COLUMN_TIME), "Нет столбца " + COLUMN_TIME);
-        softAssert.assertTrue(headers.contains(COLUMN_STATUS), "Нет столбца " + COLUMN_STATUS);
-        softAssert.assertTrue(headers.contains(COLUMN_ACTION), "Нет столбца " + COLUMN_ACTION);
+        softAssert.assertTrue(headers.contains(COLUMN_NUMBER_AS_IMPLEMENTED), String.format("Нет столбца %s", COLUMN_APPLICATION_NUMBER));
+        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), String.format("Нет столбца %s", COLUMN_ACTION));
+        softAssert.assertTrue(headers.contains(COLUMN_TYPE_AS_IMPLEMENTED), String.format("Нет столбца %s", COLUMN_SERVICE_TYPE));
+        softAssert.assertTrue(headers.contains(COLUMN_TIME),  String.format("Нет столбца %s", COLUMN_TIME));
+        softAssert.assertTrue(headers.contains(COLUMN_STATUS), String.format("Нет столбца %s", COLUMN_STATUS));
+        softAssert.assertTrue(headers.contains(COLUMN_ACTION), String.format("Нет столбца %s", COLUMN_ACTION));
         softAssert.assertAll();
     }
 }

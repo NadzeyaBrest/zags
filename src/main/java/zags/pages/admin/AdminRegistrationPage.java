@@ -8,39 +8,47 @@ import zags.core.Wait;
 import zags.models.Admin;
 import zags.pages.MainPage;
 
-import static zags.pages.CommonLocators.*;
+import static zags.core.Constants.BIRTH_DATE;
+import static zags.core.Constants.CLOSE;
+import static zags.core.Constants.FIRST_NAME;
+import static zags.core.Constants.LAST_NAME;
+import static zags.core.Constants.MIDDLE_NAME;
+import static zags.core.Constants.NEXT;
+import static zags.core.Constants.PASSPORT;
+import static zags.core.Constants.PHONE;
+import static zags.core.Constants.SHORT_TIMEOUT;
 
 public class AdminRegistrationPage {
     private final WebDriver driver;
 
-    @FindBy(xpath = LAST_NAME_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + LAST_NAME + "')]/../following-sibling::input")
     private WebElement adminLastName;
 
-    @FindBy(xpath = FIRST_NAME_INPUT )
+    @FindBy(xpath =  "//label[contains(text(),'" + FIRST_NAME + "')]/../following-sibling::input")
     private WebElement adminFirstName;
 
-    @FindBy(xpath = MIDDLE_NAME_INPUT )
+    @FindBy(xpath = "//label[contains(text(),'" + MIDDLE_NAME + "')]/../following-sibling::input")
     private WebElement adminMiddleName;
 
-    @FindBy(xpath = PHONE_INPUT )
+    @FindBy(xpath = "//label[contains(text(),'" + PHONE + "')]/../following-sibling::input")
     private WebElement adminPhone;
 
-    @FindBy(xpath = PASSPORT_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + PASSPORT + "')]/../following-sibling::input")
     private WebElement adminPassport;
 
-    @FindBy(xpath = BIRTH_DATE_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + BIRTH_DATE + "')]/../following-sibling::input")
     private WebElement adminBirthDate;
 
-    @FindBy(xpath = NEXT_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + NEXT + "')]")
     private WebElement adminRegistrationNextButton;
 
-    @FindBy(xpath = CLOSE_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + CLOSE + "')]")
     private WebElement adminRegistrationCloseButton;
 
     public AdminRegistrationPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-       Wait.waitVisibility(driver,adminLastName, Wait.SHORT_TIMEOUT) ;
+       Wait.waitVisibility(driver,adminLastName, SHORT_TIMEOUT) ;
     }
 
     public AdminTablePage adminRegistrationFillAndNext(Admin admin) {
@@ -50,7 +58,7 @@ public class AdminRegistrationPage {
         adminPhone.sendKeys(admin.getPhone());
         adminPassport.sendKeys(admin.getPassportNumber());
         adminBirthDate.sendKeys(admin.getBirthDate());
-       Wait.waitClickable(driver,adminRegistrationNextButton,Wait.SHORT_TIMEOUT);
+       Wait.waitClickable(driver,adminRegistrationNextButton,SHORT_TIMEOUT);
         adminRegistrationNextButton.click();
         return new AdminTablePage(driver);
     }

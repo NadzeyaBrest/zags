@@ -9,36 +9,45 @@ import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
-import static zags.pages.CommonLocators.*;
+import static zags.core.Constants.ADDRESS;
+import static zags.core.Constants.BACK;
+import static zags.core.Constants.BIRTH_DATE;
+import static zags.core.Constants.CLOSE;
+import static zags.core.Constants.FIRST_NAME;
+import static zags.core.Constants.GENDER;
+import static zags.core.Constants.LAST_NAME;
+import static zags.core.Constants.MIDDLE_NAME;
+import static zags.core.Constants.NEXT;
+import static zags.core.Constants.PASSPORT;
+import static zags.core.Constants.SHORT_TIMEOUT;
 
 public class BirthCitizenDataPage {
     private final WebDriver driver;
-    private Wait wait;
-    @FindBy(xpath = LAST_NAME_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + LAST_NAME + "')]/../following-sibling::input")
     private WebElement birthCitizenLastName;
-    @FindBy(xpath = FIRST_NAME_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + FIRST_NAME + "')]/../following-sibling::input")
     private WebElement birthCitizenFirstName;
-    @FindBy(xpath = MIDDLE_NAME_INPUT )
+    @FindBy(xpath = "//label[contains(text(),'" + MIDDLE_NAME + "')]/../following-sibling::input")
     private WebElement birthCitizenMiddleName;
-    @FindBy(xpath = BIRTH_DATE_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + BIRTH_DATE + "')]/../following-sibling::input")
     private WebElement birthCitizenBirthDate;
-    @FindBy(xpath = GENDER_INPUT )
+    @FindBy(xpath =  "//label[contains(text(),'" + GENDER + "')]/../following-sibling::input")
     private WebElement birthCitizenGender;
-    @FindBy(xpath = PASSPORT_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + PASSPORT + "')]/../following-sibling::input")
     private WebElement birthCitizenPassport;
-    @FindBy(xpath =  ADDRESS_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + ADDRESS + "')]/../following-sibling::input")
     private WebElement birthCitizenAddress;
-    @FindBy(xpath =NEXT_BUTTON)
+    @FindBy(xpath ="//button[contains(text(),'" + NEXT + "')]")
     private WebElement birthCitizenNextButton;
-    @FindBy(xpath = CLOSE_BUTTON)
+    @FindBy(xpath =  "//button[contains(text(),'" + CLOSE + "')]")
     private WebElement birthCitizenCloseButton;
-    @FindBy(xpath =BACK_BUTTON )
+    @FindBy(xpath = "//button[contains(text(),'" + BACK + "')]")
     private WebElement birthCitizenButtonBack;
 
     public BirthCitizenDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        Wait.waitVisibility(driver,birthCitizenLastName, Wait.SHORT_TIMEOUT);
+        Wait.waitVisibility(driver,birthCitizenLastName, SHORT_TIMEOUT);
     }
 
     public BirthServiceDataPage birthCitizenDataFillAndNext(Application app) {
@@ -49,7 +58,7 @@ public class BirthCitizenDataPage {
         birthCitizenGender.sendKeys(app.getCitizenGender());
         birthCitizenPassport.sendKeys(app.getCitizenPassport());
         birthCitizenAddress.sendKeys(app.getCitizenAddress());
-        Wait.waitClickable(driver,birthCitizenNextButton,Wait.SHORT_TIMEOUT);
+        Wait.waitClickable(driver,birthCitizenNextButton,SHORT_TIMEOUT);
         birthCitizenNextButton.click();
         return new BirthServiceDataPage(driver);
 

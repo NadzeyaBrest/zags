@@ -1,16 +1,13 @@
 package zags.data;
 
 public class Constants {
-    private Constants(){}
     public static final String ADMIN_ROLE = "Aдминистратор";
     public static final String USER_ROLE = "Пользователь";
+    public static final String LAST_NAME = "LAST_NAME";
 
     public static final String BUTTON_NEXT_TEXT = "Далее";
     public static final String BUTTON_CLOSE_TEXT = "Закрыть";
     public static final String BUTTON_BACK_TEXT = "Назад";
-
-    public static final String APPLICATION_NUMBER_PREFIX = "Ваша заявка №";
-    public static final String STATUS_PREFIX = "Статус заявки:";
 
     public static final String COLUMN_APPLICATION_NUMBER = "№ заявки";
     public static final String COLUMN_APPLICANT = "Заявитель";

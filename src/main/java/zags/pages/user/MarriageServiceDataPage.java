@@ -8,36 +8,46 @@ import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
-import static zags.pages.CommonLocators.*;
+import static zags.core.Constants.BACK;
+import static zags.core.Constants.CLOSE;
+import static zags.core.Constants.FINISH;
+import static zags.core.Constants.MARRIAGE_DATE;
+import static zags.core.Constants.MARRIAGE_NEW_LAST_NAME;
+import static zags.core.Constants.MARRIAGE_SPOUSE_BIRTH_DATE;
+import static zags.core.Constants.MARRIAGE_SPOUSE_FIRST_NAME;
+import static zags.core.Constants.MARRIAGE_SPOUSE_LAST_NAME;
+import static zags.core.Constants.MARRIAGE_SPOUSE_MIDDLE_NAME;
+import static zags.core.Constants.MARRIAGE_SPOUSE_PASSPORT;
+import static zags.core.Constants.SHORT_TIMEOUT;
 
 
 public class MarriageServiceDataPage {
     private final WebDriver driver;
-    @FindBy(xpath = MARRIAGE_DATE_INPUT)
+    @FindBy(xpath = "//label[text()='" + MARRIAGE_DATE + "']/../following-sibling::input")
     private WebElement marriageDate;
-    @FindBy(xpath = MARRIAGE_NEW_LAST_NAME_INPUT)
+    @FindBy(xpath ="//label[text()='" + MARRIAGE_NEW_LAST_NAME + "']/../following-sibling::input")
     private WebElement marriageNewLastName;
-    @FindBy(xpath = MARRIAGE_SPOUSE_LAST_NAME_INPUT )
+    @FindBy(xpath =  "//label[text()='" + MARRIAGE_SPOUSE_LAST_NAME + "']/../following-sibling::input")
     private WebElement marriageSpouseLastName;
-    @FindBy(xpath =  MARRIAGE_SPOUSE_FIRST_NAME_INPUT)
+    @FindBy(xpath = "//label[text()='" + MARRIAGE_SPOUSE_FIRST_NAME + "']/../following-sibling::input")
     private WebElement marriageSpouseFirstName;
-    @FindBy(xpath = MARRIAGE_SPOUSE_MIDDLE_NAME_INPUT)
+    @FindBy(xpath = "//label[text()='" + MARRIAGE_SPOUSE_MIDDLE_NAME + "']/../following-sibling::input")
     private WebElement marriageSpouseMiddleName;
-    @FindBy(xpath = MARRIAGE_SPOUSE_BIRTH_DATE_INPUT)
+    @FindBy(xpath =  "//label[text()='" + MARRIAGE_SPOUSE_BIRTH_DATE + "']/../following-sibling::input")
     private WebElement marriageSpouseBirthDate;
-    @FindBy(xpath = MARRIAGE_SPOUSE_PASSPORT_INPUT)
+    @FindBy(xpath = "//label[text()='" + MARRIAGE_SPOUSE_PASSPORT + "']/../following-sibling::input")
     private WebElement marriageSpousePassport;
-    @FindBy(xpath =  FINISH_BUTTON)
+    @FindBy(xpath =  "//button[contains(text(),'" + FINISH + "')]")
     private WebElement marriageFinishButton;
-    @FindBy(xpath = BACK_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + BACK + "')]")
     private WebElement marriageBackButton;
-    @FindBy(xpath = CLOSE_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + CLOSE + "')]")
     private WebElement marriageCloseButton;
 
     public MarriageServiceDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        Wait.waitVisibility(driver,marriageDate,Wait.SHORT_TIMEOUT);
+        Wait.waitVisibility(driver,marriageDate,SHORT_TIMEOUT);
     }
 
     public StatusPage marriageServiceFillAndFinish(Application app) {
@@ -48,7 +58,7 @@ public class MarriageServiceDataPage {
         marriageSpouseMiddleName.sendKeys(app.getMarriageSpouseMiddleName());
         marriageSpouseBirthDate.sendKeys(app.getMarriageSpouseBirthDate());
         marriageSpousePassport.sendKeys(app.getMarriageSpousePassport());
-        Wait.waitClickable(driver,marriageFinishButton,Wait.SHORT_TIMEOUT);
+        Wait.waitClickable(driver,marriageFinishButton,SHORT_TIMEOUT);
         marriageFinishButton.click();
         return new StatusPage(driver);
     }

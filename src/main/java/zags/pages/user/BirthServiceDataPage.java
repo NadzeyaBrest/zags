@@ -7,31 +7,39 @@ import zags.core.Wait;
 import zags.models.Application;
 import zags.pages.MainPage;
 
-import static zags.pages.CommonLocators.*;
+import static zags.core.Constants.BIRTH_FATHER;
+import static zags.core.Constants.BIRTH_GRANDFATHER;
+import static zags.core.Constants.BIRTH_GRANDMOTHER;
+import static zags.core.Constants.BIRTH_MOTHER;
+import static zags.core.Constants.BIRTH_PLACE;
+import static zags.core.Constants.CLOSE;
+import static zags.core.Constants.FINISH;
+import static zags.core.Constants.NEXT;
+import static zags.core.Constants.SHORT_TIMEOUT;
 
 public class BirthServiceDataPage {
     private final WebDriver driver;
-    @FindBy(xpath = BIRTH_PLACE_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + BIRTH_PLACE + "')]/../following-sibling::input")
     private WebElement birthPlace;
-    @FindBy(xpath = BIRTH_MOTHER_INPUT )
+    @FindBy(xpath = "//label[contains(text(),'" + BIRTH_MOTHER + "')]/../following-sibling::input")
     private WebElement birthMother;
-    @FindBy(xpath = BIRTH_FATHER_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + BIRTH_FATHER + "')]/../following-sibling::input")
     private WebElement birthFather;
-    @FindBy(xpath = BIRTH_GRANDMOTHER_INPUT)
+    @FindBy(xpath = "//label[contains(text(),'" + BIRTH_GRANDMOTHER + "')]/../following-sibling::input")
     private WebElement birthGrandmother;
-    @FindBy(xpath = BIRTH_GRANDFATHER_INPUT)
+    @FindBy(xpath =  "//label[contains(text(),'" + BIRTH_GRANDFATHER + "')]/../following-sibling::input")
     private WebElement birthGrandfather;
-    @FindBy(xpath = FINISH_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + FINISH + "')]")
     private WebElement birthFinishButton;
-    @FindBy(xpath = NEXT_BUTTON)
+    @FindBy(xpath =  "//button[contains(text(),'" + NEXT + "')]")
     private WebElement birthBackButton;
-    @FindBy(xpath = CLOSE_BUTTON)
+    @FindBy(xpath = "//button[contains(text(),'" + CLOSE + "')]")
     private WebElement birthCloseButton;
 
     public BirthServiceDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        Wait.waitVisibility(driver,birthPlace,Wait.SHORT_TIMEOUT);
+        Wait.waitVisibility(driver,birthPlace,SHORT_TIMEOUT);
     }
 
     public StatusPage birthServiceFillAndFinish(Application app) {
@@ -40,7 +48,7 @@ public class BirthServiceDataPage {
         birthFather.sendKeys(app.getBirthFather());
         birthGrandmother.sendKeys(app.getBirthGrandmother());
         birthGrandfather.sendKeys(app.getBirthGrandfather());
-        Wait.waitClickable(driver,birthFinishButton,Wait.SHORT_TIMEOUT);
+        Wait.waitClickable(driver,birthFinishButton,SHORT_TIMEOUT);
         birthFinishButton.click();
         return new StatusPage(driver);
     }
