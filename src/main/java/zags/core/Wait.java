@@ -9,10 +9,6 @@ import java.time.Duration;
 
 public class Wait {
 
-
-    private Wait() {
-    }
-
     public static WebDriverWait createWait(WebDriver driver, long seconds) {
         return new WebDriverWait(driver, Duration.ofSeconds(seconds));
     }

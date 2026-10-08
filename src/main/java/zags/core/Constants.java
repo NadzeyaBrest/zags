@@ -43,19 +43,9 @@ public class Constants {
     public static final String BACK   = "Назад";
     public static final String FINISH = "Завершить";
     public static final String REFRESH = "Обновить";
-
-
     public static final long SHORT_TIMEOUT = 3;
-    public static final long MEDIUM_TIMEOUT = 5;
-    public static final long LONG_TIMEOUT = 10;
-
-
     public static final String COLUMN_APPLICATION_NUMBER = "№ заявки";
-    public static final String COLUMN_APPLICANT = "Заявитель";
-    public static final String COLUMN_SERVICE_TYPE = "Вид услуги";
-    public static final String COLUMN_TIME = "Время";
     public static final String COLUMN_STATUS = "Статус";
-    public static final String COLUMN_ACTION = "Действие";
     public static final String COLUMN_NUMBER_AS_IMPLEMENTED = "№";
     public static final String COLUMN_TYPE_AS_IMPLEMENTED = "Тип";
 }
