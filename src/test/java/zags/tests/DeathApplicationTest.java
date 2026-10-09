@@ -1,5 +1,12 @@
 package zags.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.data.TestData;
@@ -7,9 +14,15 @@ import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.user.StatusPage;
 import static zags.data.Constants.*;
-
+@Epic("Пользовательские заявки")
+@Feature("Создание заявки на смерть")
 public class DeathApplicationTest extends BaseTest {
-    @Test (groups = {"user"})
+    @Test ( testName = "Пользователь создаёт заявку на смерть",
+            groups = {"user"})
+    @Story("Пользователь создаёт заявку на смерть")
+    @Description("Проверяем создание заявки на смерть: заполнение всех форм и получение номера со статусом")
+    @Severity(SeverityLevel.CRITICAL)
+    @TmsLink("177")
     public void checkCreateDeathApplication() {
         Application app = TestData.getDeathApplication();
 
