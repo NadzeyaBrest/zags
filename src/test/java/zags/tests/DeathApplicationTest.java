@@ -16,9 +16,9 @@ import zags.pages.user.StatusPage;
 import static zags.data.Constants.*;
 @Epic("Пользовательские заявки")
 @Feature("Создание заявки на смерть")
+@Test(testName = "Создание заявки на регистрацию смерти (Пользователь)")
 public class DeathApplicationTest extends BaseTest {
-    @Test ( testName = "Пользователь создаёт заявку на смерть",
-            groups = {"user"})
+    @Test ( groups = {"user"},description = "Пользователь создаёт заявку на смерть")
     @Story("Пользователь создаёт заявку на смерть")
     @Description("Проверяем создание заявки на смерть: заполнение всех форм и получение номера со статусом")
     @Severity(SeverityLevel.CRITICAL)

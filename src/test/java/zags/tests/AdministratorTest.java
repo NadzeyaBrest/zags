@@ -17,7 +17,7 @@ import zags.pages.admin.AdminTablePage;
 import static zags.data.Constants.*;
 
 import java.util.List;
-
+@Test(testName = "Проверка роли администратора")
 @Epic("Панель администратора")
 @Feature("Просмотр таблицы заявок")
 public class AdministratorTest extends BaseTest {
@@ -33,8 +33,7 @@ public class AdministratorTest extends BaseTest {
                 .adminRegistrationFillAndNext(admin);
     }
 
-    @Test(testName = "Проверка роли администратора в шапке страницы",
-            groups = {"admin"})
+    @Test( groups = {"admin"}, description= "Проверка роли администратора в шапке страницы")
     @Story("Проверка роли администратора")
     @Description("Проверяем, что после выбора роли администратор в шапке отображается роль Администратор")
     public void checkAdministratorMode() {
@@ -42,7 +41,7 @@ public class AdministratorTest extends BaseTest {
         Assert.assertEquals(mode, ADMIN_ROLE);
     }
 
-    @Test(  testName = "Проверка заголовков таблицы по ТЗ", groups = {"admin"}, enabled = false) //  заголовки не соответствуют ТЗ
+    @Test( groups = {"admin"},description = "Проверка заголовков таблицы по ТЗ", enabled = false) //  заголовки не соответствуют ТЗ
     @Story("Проверка заголовков таблицы по ТЗ")
     @Description("Проверяем, что заголовки колонок таблицы соответствуют требованиям ТЗ")
     @TmsLink("156")
@@ -59,7 +58,7 @@ public class AdministratorTest extends BaseTest {
     }
 
     @Story("Проверка фактических заголовков таблицы")
-    @Test(  testName = "Проверка фактических заголовков таблицы",groups = {"admin"})
+    @Test(  description = "Проверка фактических заголовков таблицы",groups = {"admin"})
     @TmsLink("156")
     public void checkAdminTableColumnsAsImplemented() {
 

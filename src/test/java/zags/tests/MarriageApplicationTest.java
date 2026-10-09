@@ -17,10 +17,10 @@ import zags.pages.user.StatusPage;
 import static zags.data.Constants.*;
 @Epic("Пользовательские заявки")
 @Feature("Создание заявки на брак")
+@Test(testName = "Создание заявки на регистрацию брака (Пользователь)")
 public class MarriageApplicationTest extends BaseTest {
 
-    @Test(testName = "Пользователь создаёт заявку на брак",
-            groups = {"user"})
+    @Test(groups = {"user"},description = "Пользователь создаёт заявку на брак")
     @Story("Пользователь создаёт заявку на брак")
     @Description("Проверяем создание заявки на брак: заполнение всех форм и получение номера со статусом")
     @Severity(SeverityLevel.CRITICAL)

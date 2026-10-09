@@ -17,10 +17,10 @@ import zags.pages.user.StatusPage;
 import static zags.data.Constants.STATUS_IN_PROGRESS;
 @Epic("Пользовательские заявки")
 @Feature("Создание заявки на рождение")
+@Test(testName = "Создание заявки на регистрацию рождения (Пользователь)")
 public class BirthApplicationTest extends BaseTest {
 
-    @Test( testName = "Пользователь создаёт заявку на рождение",
-            groups = {"user"})
+    @Test( groups = {"user"}, description = "Пользователь создаёт заявку на рождение")
     @Story("Пользователь создаёт заявку на рождение")
     @Description("Проверяем, что пользователь может заполнить все формы заявки на рождение " +
             "и после завершения видит номер заявки и статус 'На рассмотрении'")

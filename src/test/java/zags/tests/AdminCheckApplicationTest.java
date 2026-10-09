@@ -18,6 +18,7 @@ import zags.pages.admin.AdminTablePage;
 import zags.pages.user.StatusPage;
 @Epic("Кросс-ролевые сценарии")
 @Feature("Проверка заявок администратором")
+@Test(testName =  "Проверка отображения заявок пользователя в таблице администратора")
 public class AdminCheckApplicationTest extends BaseTest {
     private MainPage mainPage;
 
@@ -26,14 +27,12 @@ public class AdminCheckApplicationTest extends BaseTest {
         mainPage = new MainPage(driver);
     }
 
-    @Test(testName =  "Проверка заявки на рождение администратором",
-            groups = {"crossRole"})
+    @Test(groups = {"crossRole"}, description = "Проверка заявки на рождение администратором")
     @Story("Админ проверяет заявку на рождение")
     @Description("Пользователь создаёт заявку на рождение, админ  проверяет, " +
             "что заявка появилась в таблице с корректным типом и статусом")
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("179")
-
     public void checkBirthApplicationByAdmin() {
         Application birthApp = TestData.getBirthApplication();
 
@@ -67,8 +66,7 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(testName =  "Проверка заявки на рождение администратором",
-            groups = {"crossRole"})
+    @Test(groups = {"crossRole"},description =  "Проверка заявки на рождение администратором")
     @Story("Админ проверяет заявку на брак")
     @Description("Пользователь создаёт заявку на брак, админ  проверяет её в таблице")
     @Severity(SeverityLevel.BLOCKER)
@@ -106,8 +104,7 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(testName = "Проверка заявки на смерть администратором",
-            groups = {"crossRole"})
+    @Test(groups = {"crossRole"},description = "Проверка заявки на смерть администратором")
     @Story("Админ проверяет заявку на смерть")
     @Description("Пользователь создаёт заявку на смерть, админ проверяет её в таблице")
     @Severity(SeverityLevel.BLOCKER)
