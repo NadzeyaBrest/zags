@@ -1,6 +1,8 @@
 package zags.tests;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -9,24 +11,25 @@ import zags.core.DriverManager;
 
 public class BaseTest {
     protected WebDriver driver;
+    protected static final Logger log = LogManager.getLogger(BaseTest.class);
     Dotenv dotenv = Dotenv.load();
     String username = dotenv.get("TEST_USERNAME");
     String password = dotenv.get("TEST_PASSWORD");
     String BASE_URL = dotenv.get("BASE_URL");
 
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
-
+        log.debug("Старт теста. Открываем браузер ");
         driver = DriverManager.getInstance().getDriver();
-
-        driver.get("https://"
-                + username + ":" + password + BASE_URL);
+        String authorizedUrl = String.format("https://%s:%s%S", username, password, BASE_URL);
+        driver.get(authorizedUrl);
+        log.info("Открыт URL: {}", authorizedUrl);
     }
 
-    @AfterMethod (alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
 
     public void tearDown() {
-
+        log.debug("Тест завершён. Закрываем браузер");
         DriverManager.getInstance().closeDriver();
     }
 

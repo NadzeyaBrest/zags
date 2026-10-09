@@ -1,5 +1,8 @@
 package zags.pages.user;
 
+import io.qameta.allure.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -22,34 +25,38 @@ import static zags.core.Constants.SHORT_TIMEOUT;
 
 public class MarriageCitizenDataPage {
     private WebDriver driver;
+    private static final Logger log = LogManager.getLogger(MarriageCitizenDataPage.class);
     @FindBy(xpath = "//label[contains(text(),'" + LAST_NAME + "')]/../following-sibling::input")
     private WebElement marriageCitizenLastName;
-    @FindBy(xpath ="//label[contains(text(),'" + FIRST_NAME + "')]/../following-sibling::input")
+    @FindBy(xpath = "//label[contains(text(),'" + FIRST_NAME + "')]/../following-sibling::input")
     private WebElement marriageCitizenFirstName;
     @FindBy(xpath = "//label[contains(text(),'" + MIDDLE_NAME + "')]/../following-sibling::input")
     private WebElement marriageCitizenMiddleName;
     @FindBy(xpath = "//label[contains(text(),'" + BIRTH_DATE + "')]/../following-sibling::input")
     private WebElement marriageCitizenBirthDate;
-    @FindBy(xpath =  "//label[contains(text(),'" + GENDER + "')]/../following-sibling::input")
+    @FindBy(xpath = "//label[contains(text(),'" + GENDER + "')]/../following-sibling::input")
     private WebElement marriageCitizenGender;
     @FindBy(xpath = "//label[contains(text(),'" + PASSPORT + "')]/../following-sibling::input")
     private WebElement marriageCitizenPassport;
-    @FindBy(xpath ="//label[contains(text(),'" + ADDRESS + "')]/../following-sibling::input")
+    @FindBy(xpath = "//label[contains(text(),'" + ADDRESS + "')]/../following-sibling::input")
     private WebElement marriageCitizenAddress;
-    @FindBy(xpath =  "//button[contains(text(),'" + NEXT + "')]")
+    @FindBy(xpath = "//button[contains(text(),'" + NEXT + "')]")
     private WebElement marriageCitizenNextButton;
-    @FindBy(xpath ="//button[contains(text(),'" + CLOSE + "')]")
+    @FindBy(xpath = "//button[contains(text(),'" + CLOSE + "')]")
     private WebElement marriageCitizenCloseButton;
-    @FindBy(xpath ="//button[contains(text(),'" + BACK + "')]")
+    @FindBy(xpath = "//button[contains(text(),'" + BACK + "')]")
     private WebElement marriageCitizenBackButton;
 
     public MarriageCitizenDataPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        Wait.waitVisibility(driver,marriageCitizenLastName,SHORT_TIMEOUT);
+        log.info("Открыта страница данных гражданина (брак)");
+        Wait.waitVisibility(driver, marriageCitizenLastName, SHORT_TIMEOUT);
     }
 
+    @Step("Заполнить данные гражданина (брак) и нажать Далее")
     public MarriageServiceDataPage marriageCitizenFillAndNext(Application app) {
+        log.info("Заполняем данные гражданина (брак)");
         marriageCitizenLastName.sendKeys(app.getCitizenLastName());
         marriageCitizenFirstName.sendKeys(app.getCitizenFirstName());
         marriageCitizenMiddleName.sendKeys(app.getCitizenMiddleName());
@@ -57,15 +64,22 @@ public class MarriageCitizenDataPage {
         marriageCitizenGender.sendKeys(app.getCitizenGender());
         marriageCitizenPassport.sendKeys(app.getCitizenPassport());
         marriageCitizenAddress.sendKeys(app.getCitizenAddress());
-        Wait.waitClickable(driver,marriageCitizenNextButton,SHORT_TIMEOUT);
+        Wait.waitClickable(driver, marriageCitizenNextButton, SHORT_TIMEOUT);
         marriageCitizenNextButton.click();
+        log.info("Данные гражданина (брак) отправлены");
         return new MarriageServiceDataPage(driver);
     }
+
+    @Step("Вернуться на страницу выбора услуги (данные гражданина, брак)")
     public ServiceSelectionPage clickMarriageCitizenBackButton() {
+        log.info("Клик: Назад (возврат на страницу выбора услуги)");
         marriageCitizenBackButton.click();
         return new ServiceSelectionPage(driver);
     }
+
+    @Step("Закрыть страницу данных гражданина (брак)")
     public MainPage clickMarriageCitizenCloseButton() {
+        log.info("Клик: Закрыть страницу данных гражданина (брак) (переход на главную)");
         marriageCitizenCloseButton.click();
         return new MainPage(driver);
     }

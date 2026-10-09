@@ -1,5 +1,12 @@
 package zags.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -9,9 +16,10 @@ import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.admin.AdminTablePage;
 import zags.pages.user.StatusPage;
-
+@Epic("Кросс-ролевые сценарии")
+@Feature("Проверка заявок администратором")
+@Test(testName =  "Проверка отображения заявок пользователя в таблице администратора")
 public class AdminCheckApplicationTest extends BaseTest {
-
     private MainPage mainPage;
 
     @BeforeMethod (alwaysRun = true)
@@ -19,7 +27,12 @@ public class AdminCheckApplicationTest extends BaseTest {
         mainPage = new MainPage(driver);
     }
 
-    @Test(groups = {"crossRole"})
+    @Test(groups = {"crossRole"}, description = "Проверка заявки на рождение администратором")
+    @Story("Админ проверяет заявку на рождение")
+    @Description("Пользователь создаёт заявку на рождение, админ  проверяет, " +
+            "что заявка появилась в таблице с корректным типом и статусом")
+    @Severity(SeverityLevel.BLOCKER)
+    @TmsLink("179")
     public void checkBirthApplicationByAdmin() {
         Application birthApp = TestData.getBirthApplication();
 
@@ -39,7 +52,6 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
 
-
         String idLatestAppFromAdminTable = adminTable.getIdLatestAppFromAdminTable();
 
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
@@ -54,7 +66,11 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(groups = {"crossRole"})
+    @Test(groups = {"crossRole"},description =  "Проверка заявки на рождение администратором")
+    @Story("Админ проверяет заявку на брак")
+    @Description("Пользователь создаёт заявку на брак, админ  проверяет её в таблице")
+    @Severity(SeverityLevel.BLOCKER)
+    @TmsLink("178")
     public void checkMarriageApplicationByAdmin() {
         Application marriageApp = TestData.getMarriageApplication();
 
@@ -74,7 +90,6 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
 
-
         String idLatestAppFromAdminTable = adminTable.getIdLatestAppFromAdminTable();
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
         String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFromAdminTable);
@@ -87,14 +102,15 @@ public class AdminCheckApplicationTest extends BaseTest {
                 "Тип заявки отличается от выбранной пользователем");
         softAssert.assertEquals(statusOfAppFromAdminTable, applicationStatusShowedUser, "Статус заявки в таблице администратора отличается от статуса заявки пользователя");
         softAssert.assertAll();
-
-
     }
 
-    @Test(groups = {"crossRole"})
+    @Test(groups = {"crossRole"},description = "Проверка заявки на смерть администратором")
+    @Story("Админ проверяет заявку на смерть")
+    @Description("Пользователь создаёт заявку на смерть, админ проверяет её в таблице")
+    @Severity(SeverityLevel.BLOCKER)
+    @TmsLink("180")
     public void checkDeathApplicationByAdmin() {
         Application deathApp = TestData.getDeathApplication();
-
 
         StatusPage deathStatusPage = mainPage
                 .selectUserMode()
@@ -111,7 +127,6 @@ public class AdminCheckApplicationTest extends BaseTest {
         AdminTablePage adminTable = new MainPage(driver)
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
-
 
         String idLatestAppFomAdminTable = adminTable.getIdLatestAppFromAdminTable();
         String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFomAdminTable);
