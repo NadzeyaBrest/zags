@@ -21,7 +21,7 @@ public class BaseTest {
     public void setUp() {
         log.debug("Старт теста. Открываем браузер ");
         driver = DriverManager.getInstance().getDriver();
-        String authorizedUrl = String.format("https://%s:%s%S", username, password, BASE_URL);
+        String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);
         driver.get(authorizedUrl);
         log.info("Открыт URL: {}", authorizedUrl);
     }

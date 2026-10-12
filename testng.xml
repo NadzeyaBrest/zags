@@ -1,6 +1,9 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="ZagsSuite" verbose="1">
-    <test name="User tests">
+    <listeners>
+        <listener class-name="zags.data.TestListener"/>
+    </listeners>
+    <test name="Пользовательские сценарии">
         <groups>
             <run>
                 <include name="user"/>
@@ -8,9 +11,10 @@
         </groups>
         <packages>
             <package name="zags.tests"/>
+            <package name="zags.apiTests"/>
         </packages>
     </test>
-    <test name="Admin tests">
+    <test name="Сценарии администратора">
         <groups>
             <run>
                 <include name="admin"/>
@@ -20,7 +24,7 @@
             <package name="zags.tests"/>
         </packages>
     </test>
-    <test name="Cross-role tests">
+    <test name="Кросс-ролевые сценарии">
         <groups>
             <run>
                 <include name="crossRole"/>
@@ -28,6 +32,16 @@
         </groups>
         <packages>
             <package name="zags.tests"/>
+        </packages>
+    </test>
+    <test name="API-тесты">
+        <groups>
+            <run>
+                <include name="API"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="zags.apiTests"/>
         </packages>
     </test>
 

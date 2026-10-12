@@ -41,6 +41,7 @@ public class StatusPage {
         PageFactory.initElements(driver, this);
         log.info("Открыта страница статуса заявки");
         Wait.waitVisibility(driver, textThankYou, SHORT_TIMEOUT);
+        Wait.waitVisibility(driver, statusApplicationNumberText, SHORT_TIMEOUT);
     }
 
     @Step("Закрыть страницу статуса")
