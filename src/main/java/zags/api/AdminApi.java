@@ -1,5 +1,6 @@
 package zags.api;
 
+import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import zags.api.models.AdminProcessRequest;
@@ -17,7 +18,7 @@ public class AdminApi {
 
     private static final Logger log = LogManager.getLogger(AdminApi.class);
 
-
+    @Step("API: создать админа")
     public static CreateAdminResponse sendAdminRequest(AdminRequest admin) {
         log.info("POST /sendAdminRequest");
         CreateAdminResponse response = given()
@@ -26,13 +27,14 @@ public class AdminApi {
                 .when()
                 .post(Endpoints.createAdmin)
                 .then()
-                .spec(Specifications.resSpec(200))
+                .statusCode(200)
                 .extract().body().jsonPath()
                 .getObject("data", CreateAdminResponse.class);
         log.info("Админ создан: staffid={}", response.getStaffid());
         return response;
     }
 
+    @Step("API: обработать заявку {request.applId}, action={request.action}")
     public static ApplicationResponseForAdmin processApplication(AdminProcessRequest request) {
         log.info("POST /requestProcess, applId={}, action={}",
                 request.getApplId(), request.getAction());
@@ -43,7 +45,7 @@ public class AdminApi {
                 .when()
                 .post(Endpoints.changeApplicationStatus)
                 .then()
-                .spec(Specifications.resSpec(200))
+                .statusCode(200)
                 .extract().body().jsonPath()
                 .getObject("data", ApplicationResponseForAdmin.class);
         log.info("Статус заявки {} изменён на '{}'",
@@ -51,21 +53,7 @@ public class AdminApi {
         return response;
     }
 
-    public static List<ApplicationResponseForAdmin> getInfoForOneApplication() {
-        log.debug("GET /getApplications?limit=1");
-        List<ApplicationResponseForAdmin> applications = given()
-                .spec(Specifications.reqSpec())
-                .queryParam("limit", 1)
-                .when()
-                .get(Endpoints.getApplications)
-                .then()
-                .spec(Specifications.resSpec(200))
-                .extract().body().jsonPath()
-                .getList("data", ApplicationResponseForAdmin.class);
-        log.debug("Получено заявок: {}", applications.size());
-        return applications;
-    }
-
+    @Step("API: получить заявку по id={appId}")
     public static ApplicationByIdResponse getApplicationById(Integer appId) {
         log.info("GET /getApplStatus/{}", appId);
         ApplicationByIdResponse response = given()
@@ -74,12 +62,13 @@ public class AdminApi {
                 .pathParams("applicationId", appId)
                 .get(Endpoints.getApplicationById)
                 .then()
-                .spec(Specifications.resSpec(200))
+                .statusCode(200)
                 .extract().body().jsonPath().getObject("data", ApplicationByIdResponse.class);
         log.info("Статус заявки {}: '{}'", appId, response.getStatusofapplication());
         return response;
     }
 
+    @Step("API: получить все заявки")
     public static List<ApplicationResponseForAdmin> getAllApplication() {
         log.info("GET /getApplications — получить все заявки");
         List<ApplicationResponseForAdmin> applications = given()
@@ -87,7 +76,7 @@ public class AdminApi {
                 .when()
                 .get(Endpoints.getApplications)
                 .then()
-                .spec(Specifications.resSpec(200))
+                .statusCode(200)
                 .extract().body().jsonPath()
                 .getList("data", ApplicationResponseForAdmin.class);
         log.info("Получено заявок: {}", applications.size());

@@ -1,6 +1,7 @@
 package zags.api.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,13 +32,21 @@ public class UserCreateRequest {
     private String anotherPersonLastName;
     private String anotherPersonFirstName;
     private String anotherPersonMiddleName;
-    private String birth_of_anotoherPerson;
+    @JsonProperty("birth_of_anotoherPerson")
+    private String anotherPersonBirthDate;
     private String anotherPersonPassport;
-    private Object birth_place;
-    private Object birth_mother;
-    private Object birth_father;
-    private Object birth_grandpa;
-    private Object birth_grandma;
-    private Object death_dateOfDeath;
-    private Object death_placeOfDeath;
+    @JsonProperty("birth_place")
+    private String birthPlace;
+    @JsonProperty("birth_mother")
+    private String birthMother;
+    @JsonProperty("birth_father")
+    private String birthFather;
+    @JsonProperty("birth_grandpa")
+    private String birthGrandpa;
+    @JsonProperty("birth_grandma")
+    private String birthGrandma;
+    @JsonProperty("death_dateOfDeath")
+    private String deathDateOfDeath;
+    @JsonProperty("death_placeOfDeath")
+    private String deathPlaceOfDeath;
 }

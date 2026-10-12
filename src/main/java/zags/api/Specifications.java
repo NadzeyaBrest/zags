@@ -24,9 +24,4 @@ public class Specifications {
                 .build();
     }
 
-    public static ResponseSpecification resSpec(Integer code) {
-        return new ResponseSpecBuilder()
-                .expectStatusCode(code)
-                .build();
-    }
 }

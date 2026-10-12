@@ -7,50 +7,37 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
+import zags.data.Builders;
 
 @Epic("API заявок")
 @Feature("Создание заявки на брак")
-@Test(testName = "API: Создание заявки на брак",
-        groups = {"API"})
+@Test(testName = "API: Создание заявки на брак")
 public class MarriageUserApplicationTest {
-    @Test(description = "Пользователь создаёт заявку на брак")
+
+    private Integer appId;
+
+    @AfterMethod(alwaysRun = true)
+    public void cleanup() {
+        if (appId != null) {
+            ApplicationRepository.deleteById(appId);
+        }
+    }
+    @Test(description = "Пользователь создаёт заявку на брак",         groups = {"API"})
     @Story("POST /sendUserRequest (wedding)")
     @Description("Заявка создаётся, возвращается merrigecertificateid")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("183")
     public void checkCreateMarriageUserApplication() {
-        UserCreateRequest userAppMarriage = UserCreateRequest.builder()
-                .mode("wedding")
-                .personalLastName("Gromov")
-                .personalFirstName("Mark")
-                .personalMiddleName("Ivanovich")
-                .personalPhoneNumber("799912345")
-                .personalNumberOfPassport("AB123456")
-                .personalAddress("Брестская")
-                .citizenLastName("Gromov")
-                .citizenFirstName("Mark")
-                .citizenMiddleName("Ivanovich")
-                .citizenBirthDate("2000-09-11")
-                .citizenNumberOfPassport("AB123456")
-                .citizenGender("Муж")
-                .citizenAddress("Brestskaya,15")
-                .dateOfMarriage("2026-09-30")
-                .newLastName("Gromov")
-                .anotherPersonLastName("Svetova")
-                .anotherPersonFirstName("Svetlana")
-                .anotherPersonMiddleName("Petrovna")
-                .birth_of_anotoherPerson("2001-06-11")
-                .anotherPersonPassport("AB176543")
-                .build();
-
+        UserCreateRequest userAppMarriage = Builders.userWeddingRequest();
         UserCreateResponceApp createdMarriageApplication = UserApi.sendUserRequest(userAppMarriage);
-        Integer appId = createdMarriageApplication.getApplicationid();
+        appId = createdMarriageApplication.getApplicationid();
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(createdMarriageApplication, "data = null");
         softAssert.assertTrue(createdMarriageApplication.getApplicationid() > 0,

@@ -21,7 +21,7 @@ public class UserApi {
                 .when()
                 .post(Endpoints.createUser)
                 .then()
-                .spec(Specifications.resSpec(200))
+                .statusCode(200)
                 .extract().body().jsonPath()
                 .getObject("data", UserCreateResponceApp.class);
         log.info("Заявка создана: applicationid={}, applicantid={}, citizenid={}",

@@ -7,48 +7,35 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
+import zags.data.Builders;
 
 @Epic("API заявок")
 @Feature("Создание заявки на рождение")
-@Test(testName = "API: Создание заявки на рождение",
-        groups = {"API"})
+@Test(testName = "API: Создание заявки на рождение")
 public class BirthUserApplicationTest {
-    @Test(description = "Пользователь создаёт заявку на рождение")
+    private Integer appId;
+    @AfterMethod(alwaysRun = true)
+    public void cleanup() {
+        if (appId != null) {
+            ApplicationRepository.deleteById(appId);
+        }
+    }
+    @Test(description = "Пользователь создаёт заявку на рождение",    groups = {"API"})
     @Story("POST /sendUserRequest (birth)")
     @Description("Заявка создаётся, возвращается birthcertificateid")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("181")
     public void checkCreateBirthUserApplication() {
-        UserCreateRequest userAppBirth = UserCreateRequest
-                .builder()
-                .mode("birth")
-                .personalLastName("Ivanov")
-                .personalFirstName("Ivan")
-                .personalMiddleName("Ivanovich")
-                .personalPhoneNumber("79991234567")
-                .personalNumberOfPassport("AB123456")
-                .citizenLastName("Ivanov")
-                .citizenFirstName("Petr")
-                .citizenMiddleName("Ivanovich")
-                .citizenBirthDate("2001-06-11")
-                .citizenNumberOfPassport("AB123456")
-                .citizenGender("Муж")
-                .birth_place("Brest")
-                .birth_mother("Ivanova Maria")
-                .birth_father("Ivanov Ivan")
-                .birth_grandma("Vilova Inna")
-                .birth_grandpa("Vilou David")
-                .build();
-
+        UserCreateRequest userAppBirth = Builders.userBirthRequest();
         UserCreateResponceApp createdBirthApplication = UserApi.sendUserRequest(userAppBirth);
-
-        int appId = createdBirthApplication.getApplicationid();
+        appId = createdBirthApplication.getApplicationid();
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(createdBirthApplication, "data = null");

@@ -13,68 +13,63 @@ public class ApplicationRepository {
 
     private static final Logger log = LogManager.getLogger(ApplicationRepository.class);
 
-
-    @Step("БД: проверить существование заявки {applicationId}")
-    public static boolean existsById(int applicationId) {
-        String sql = "SELECT 1 FROM reg_office.applications WHERE applicationid = ?";
-
+    private static <T> T query(String sql, int id, RowMapper<T> mapper) {
         try (Connection conn = DatabaseConnection.get();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, applicationId);
+            ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
-                boolean exists = rs.next();
-                log.info("БД: заявка {} {}", applicationId, exists ? "найдена" : "НЕ найдена");
-                return exists;
+                return mapper.map(rs);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка запроса к БД: " + e.getMessage(), e);
+            throw new RuntimeException("Ошибка запроса к БД, id=" + id, e);
         }
+    }
+    private static int update(String sql, int id) {
+        try (Connection conn = DatabaseConnection.get();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка запроса к БД, id=" + id, e);
+        }
+    }
+
+    private static Boolean existsMap(ResultSet rs) throws SQLException {
+        return rs.next();
+    }
+
+    private static String statusMap(ResultSet rs) throws SQLException {
+        return rs.next() ? rs.getString("statusofapplication") : null;
+    }
+
+    private static String kindMap(ResultSet rs) throws SQLException {
+        return rs.next() ? rs.getString("kindofapplication") : null;
+    }
+
+    @Step("БД: проверить существование заявки {applicationId}")
+    public static boolean existsById(int applicationId) {
+
+        String sql = "SELECT 1 FROM reg_office.applications WHERE applicationid = ?";
+        return query(sql, applicationId, ApplicationRepository::existsMap);
     }
 
     @Step("БД: получить статус заявки {applicationId}")
     public static String getStatusById(int applicationId) {
         String sql = "SELECT statusofapplication FROM reg_office.applications WHERE applicationid = ?";
-
-        try (Connection conn = DatabaseConnection.get();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, applicationId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String status = rs.getString("statusofapplication");
-                    log.info("БД: статус заявки {} = '{}'", applicationId, status);
-                    return status;
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка запроса к БД: " + e.getMessage(), e);
-        }
+        return query(sql, applicationId, ApplicationRepository::statusMap);
     }
-
 
     @Step("БД: получить тип заявки {applicationId}")
     public static String getKindById(int applicationId) {
         String sql = "SELECT kindofapplication FROM reg_office.applications WHERE applicationid = ?";
+        return query(sql, applicationId, ApplicationRepository::kindMap);
+    }
 
-        try (Connection conn = DatabaseConnection.get();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, applicationId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String kind = rs.getString("kindofapplication");
-                    log.info("БД: тип заявки {} = '{}'", applicationId, kind);
-                    return kind;
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка запроса к БД: " + e.getMessage(), e);
-        }
+    public static int deleteById(Integer applicationId) {
+        String sql = "DELETE FROM reg_office.applications WHERE applicationid = ?";
+        return update(sql, applicationId);
     }
 }

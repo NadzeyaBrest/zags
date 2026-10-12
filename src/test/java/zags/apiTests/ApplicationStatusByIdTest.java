@@ -7,52 +7,40 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import zags.api.AdminApi;
-import zags.api.models.ApplicationResponseForAdmin;
+import zags.api.UserApi;
 import zags.api.models.ApplicationByIdResponse;
-
-import java.util.List;
+import zags.api.models.UserCreateResponceApp;
+import zags.data.Builders;
 
 @Epic("API администратора")
 @Feature("Статус заявки по ID")
-@Test(testName = "API: Получение статуса заявки по ID", groups = {"API"})
+@Test(testName = "API: Получение статуса заявки по ID")
 public class ApplicationStatusByIdTest {
     private Integer appId;
-
     @BeforeMethod(alwaysRun = true)
-    public void prepareApplicationId() {
-        List<ApplicationResponseForAdmin> applications = AdminApi.getInfoForOneApplication();
-        Assert.assertFalse(applications.isEmpty(), "Heт заявок для проверки");
-        appId = applications.get(0).getApplicationid();
+    public void prepareApplication() {
+        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(Builders.userWeddingRequest());
+        appId = createdApplication.getApplicationid();
     }
-
-
-    @Test(description = "Проверить статус заявки по ID")
+    @Test(description = "Проверить статус заявки по ID", groups = {"API"})
     @Story("GET /getApplStatus/{applicationId}")
-    @Description("Получаем статус заявки и проверяем, что статус и тип входят в допустимые списки")
+    @Description("Свежесозданная заявка на брак имеет статус under consideration и тип Получение свидетельства о браке")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("184")
     public void checkStatusById() {
         ApplicationByIdResponse applicationStatus = AdminApi.getApplicationById(appId);
-        List<String> allowedStatuses = List.of("approved", "under consideration", "rejected");
-        List<String> allowedTypes = List.of(
-                "Получение свидетельства о рождении",
-                "Получение свидетельства о браке",
-                "Получение свидетельства о смерти"
-        );
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(applicationStatus, "data = null");
-        softAssert.assertTrue(allowedStatuses.contains(applicationStatus.getStatusofapplication()),
-                "Недопустимый статус: " + applicationStatus.getStatusofapplication());
-        softAssert.assertTrue(
-                allowedTypes.contains(applicationStatus.getKindofapplication()),
-                "Недопустимый тип: " + applicationStatus.getKindofapplication()
-        );
+        softAssert.assertEquals(applicationStatus.getStatusofapplication(), "under consideration",
+                "Свежая заявка должна быть 'under consideration'");
+        softAssert.assertEquals(applicationStatus.getKindofapplication(),
+                "Получение свидетельства о браке",
+                "Тип заявки не соответствует режиму 'wedding'");
         softAssert.assertAll();
     }
 }

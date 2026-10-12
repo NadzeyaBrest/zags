@@ -14,6 +14,6 @@ public class UserCreateResponceApp {
     private Integer applicationid;
     private Integer citizenid;
     private Integer birthcertificateid;
-    private Integer  merrigecertificateid;
+    private Integer merrigecertificateid;
     private Integer deathcertificateid;
 }
