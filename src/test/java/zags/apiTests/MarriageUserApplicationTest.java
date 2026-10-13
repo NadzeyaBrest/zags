@@ -14,7 +14,7 @@ import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API заявок")
 @Feature("Создание заявки на брак")
@@ -35,7 +35,7 @@ public class MarriageUserApplicationTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("183")
     public void checkCreateMarriageUserApplication() {
-        UserCreateRequest userAppMarriage = Builders.userWeddingRequest();
+        UserCreateRequest userAppMarriage = UserBuilder.userWeddingRequest();
         UserCreateResponceApp createdMarriageApplication = UserApi.sendUserRequest(userAppMarriage);
         appId = createdMarriageApplication.getApplicationid();
         SoftAssert softAssert = new SoftAssert();

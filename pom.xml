@@ -15,7 +15,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <selenium.version>4.49.0</selenium.version>
-        <allure.version>2.34.0</allure.version>
+        <allure.version>2.35.3</allure.version>
         <aspectj.version>1.9.22</aspectj.version>
         <log4j.version>2.26.1</log4j.version>
         <testng.version>7.12.0</testng.version>
@@ -26,6 +26,8 @@
         <lombok.version>1.18.48</lombok.version>
         <jackson.core.version>3.2.3</jackson.core.version>
         <postgresql.version>42.7.13</postgresql.version>
+        <cucumber-testng.version>7.34.8</cucumber-testng.version>
+        <cucumber-java.version>7.34.8</cucumber-java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -95,6 +97,24 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber-testng.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber-java.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>${allure.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

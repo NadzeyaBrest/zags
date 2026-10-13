@@ -14,7 +14,7 @@ import zags.api.AdminApi;
 import zags.api.UserApi;
 import zags.api.models.ApplicationByIdResponse;
 import zags.api.models.UserCreateResponceApp;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API администратора")
 @Feature("Статус заявки по ID")
@@ -23,7 +23,7 @@ public class ApplicationStatusByIdTest {
     private Integer appId;
     @BeforeMethod(alwaysRun = true)
     public void prepareApplication() {
-        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(Builders.userWeddingRequest());
+        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(UserBuilder.userWeddingRequest());
         appId = createdApplication.getApplicationid();
     }
     @Test(description = "Проверить статус заявки по ID", groups = {"API"})

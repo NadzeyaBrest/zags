@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="ZagsSuite" verbose="1">
+<suite name="ЗАГС" verbose="1">
     <listeners>
         <listener class-name="zags.data.TestListener"/>
     </listeners>
@@ -44,6 +44,10 @@
             <package name="zags.apiTests"/>
         </packages>
     </test>
-
+    <test name="Cucumber-сценарии">
+        <classes>
+            <class name="zags.cucumber.runners.BirthApplicationRunnerTest"/>
+        </classes>
+    </test>
 
 </suite>

@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -19,7 +20,8 @@ import zags.api.models.CreateAdminResponse;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.AdminBuilder;
+import zags.data.UserBuilder;
 
 @Epic("API администратора")
 @Feature("Обработка заявок")
@@ -30,10 +32,10 @@ public class AdminProcessApplicationTest {
 
     @BeforeMethod(alwaysRun = true)
     public void prepareApplicationId() {
-        UserCreateRequest userRequest = Builders.userWeddingRequest();
+        UserCreateRequest userRequest = UserBuilder.userWeddingRequest();
         UserCreateResponceApp createdApp = UserApi.sendUserRequest(userRequest);
         applId = createdApp.getApplicationid();
-        AdminRequest adminRequest = Builders.admin();
+        AdminRequest adminRequest = AdminBuilder.admin();
         CreateAdminResponse admin = AdminApi.sendAdminRequest(adminRequest);
         staffid = admin.getStaffid();
     }
@@ -44,7 +46,7 @@ public class AdminProcessApplicationTest {
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("187")
     public void changedStatusToApprovedByAdmin() {
-        AdminProcessRequest processRequest = Builders.adminProcessRequest(applId, staffid,"approved");
+        AdminProcessRequest processRequest = AdminBuilder.adminProcessRequest(applId, staffid,"approved");
         ApplicationResponseForAdmin processed = AdminApi.processApplication(processRequest);
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(processed, "data = null");
@@ -66,7 +68,7 @@ public class AdminProcessApplicationTest {
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("188")
     public void changedStatusToRejectedByAdmin() {
-        AdminProcessRequest processRequest = Builders.adminProcessRequest(applId, staffid,"rejected");
+        AdminProcessRequest processRequest = AdminBuilder.adminProcessRequest(applId, staffid,"rejected");
         ApplicationResponseForAdmin processed = AdminApi.processApplication(processRequest);
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(processed, "data = null");

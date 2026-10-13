@@ -14,7 +14,7 @@ import zags.api.AdminApi;
 import zags.api.UserApi;
 import zags.api.models.ApplicationResponseForAdmin;
 import zags.api.models.UserCreateResponceApp;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +28,7 @@ public class ApplicationsTest {
 
     @BeforeMethod(alwaysRun = true)
     public void prepare() {
-        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(Builders.userWeddingRequest());
+        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(UserBuilder.userWeddingRequest());
         appId = createdApplication.getApplicationid();
     }
 

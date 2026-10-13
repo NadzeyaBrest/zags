@@ -14,7 +14,7 @@ import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API заявок")
 @Feature("Создание заявки на смерть")
@@ -35,7 +35,7 @@ public class DeathUserApplicationTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("182")
     public void checkCreateDeathUserApplication() {
-        UserCreateRequest userAppDeath = Builders.userDeathRequest();
+        UserCreateRequest userAppDeath = UserBuilder.userDeathRequest();
         UserCreateResponceApp createdDeathApplication = UserApi.sendUserRequest(userAppDeath);
          appId = createdDeathApplication.getApplicationid();
         SoftAssert softAssert = new SoftAssert();

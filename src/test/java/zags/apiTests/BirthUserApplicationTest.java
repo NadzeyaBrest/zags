@@ -14,7 +14,7 @@ import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API заявок")
 @Feature("Создание заявки на рождение")
@@ -33,7 +33,7 @@ public class BirthUserApplicationTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("181")
     public void checkCreateBirthUserApplication() {
-        UserCreateRequest userAppBirth = Builders.userBirthRequest();
+        UserCreateRequest userAppBirth = UserBuilder.userBirthRequest();
         UserCreateResponceApp createdBirthApplication = UserApi.sendUserRequest(userAppBirth);
         appId = createdBirthApplication.getApplicationid();
 
