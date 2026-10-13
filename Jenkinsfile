@@ -21,16 +21,6 @@ pipeline {
             results: [[path: 'target/allure-results']]
         ])
     }
-
-    environment {
-        ZAGS_BASE_URL    = credentials('zags-base-url')
-        ZAGS_USERNAME    = credentials('zags-username')
-        ZAGS_PASSWORD    = credentials('zags-password')
-        ZAGS_DB_URL      = credentials('zags-db-url')
-        ZAGS_DB_USER     = credentials('zags-db-user')
-        ZAGS_DB_PASSWORD = credentials('zags-db-password')
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -38,21 +28,19 @@ pipeline {
             }
         }
 
-        stage('Prepare .env') {
-            steps {
-                script {
-                    def envContent = """\
-BASE_URL=${ZAGS_BASE_URL}
-TEST_USERNAME=${ZAGS_USERNAME}
-TEST_PASSWORD=${ZAGS_PASSWORD}
-DB_URL=${ZAGS_DB_URL}
-DB_USER=${ZAGS_DB_USER}
-DB_PASSWORD=${ZAGS_DB_PASSWORD}
-"""
-                    writeFile file: '.env', text: envContent
-                }
-            }
-        }
+       stage('Prepare .env') {
+                   steps {
+                       withCredentials([file(credentialsId: 'n-env-file', variable: 'ENV_FILE')]) {
+                           script {
+                               if (isUnix()) {
+                                   sh 'cp "$ENV_FILE" .env'
+                               } else {
+                                   bat 'copy "%ENV_FILE%" .env'
+                               }
+                           }
+                       }
+                   }
+               }
 
         stage('Run tests') {
             steps {
