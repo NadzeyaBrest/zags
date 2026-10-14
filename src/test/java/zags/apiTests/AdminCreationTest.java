@@ -39,10 +39,12 @@ public class AdminCreationTest {
     @TmsLink("186")
     public void checkCreateAdmin() {
         AdminRequest admin = AdminBuilder.admin();
-        CreateAdminResponse response = AdminApi.sendAdminRequest(admin);
+        Response adminResponse = AdminApi.sendAdminRequest(admin);
+        CreateAdminResponse response = adminResponse.jsonPath().getObject("data", CreateAdminResponse.class);
         staffId = response.getStaffid();
         SoftAssert soft = new SoftAssert();
         soft.assertNotNull(response, "response = null");
+        soft.assertEquals(adminResponse.getStatusCode(),200);
         soft.assertNotNull(response.getStaffid(),
                 "staffid = null");
         soft.assertTrue(response.getStaffid() > 0,

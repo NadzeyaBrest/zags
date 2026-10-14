@@ -33,10 +33,10 @@ public class AdminProcessApplicationTest {
     @BeforeMethod(alwaysRun = true)
     public void prepareApplicationId() {
         UserCreateRequest userRequest = UserBuilder.userWeddingRequest();
-        UserCreateResponceApp createdApp = UserApi.sendUserRequest(userRequest);
+        UserCreateResponceApp createdApp = UserApi.sendUserRequest(userRequest).jsonPath().getObject("data", UserCreateResponceApp.class);
         applId = createdApp.getApplicationid();
         AdminRequest adminRequest = AdminBuilder.admin();
-        CreateAdminResponse admin = AdminApi.sendAdminRequest(adminRequest);
+        CreateAdminResponse admin = AdminApi.sendAdminRequest(adminRequest).jsonPath().getObject("data", CreateAdminResponse.class);
         staffid = admin.getStaffid();
     }
 
@@ -47,16 +47,17 @@ public class AdminProcessApplicationTest {
     @TmsLink("187")
     public void changedStatusToApprovedByAdmin() {
         AdminProcessRequest processRequest = AdminBuilder.adminProcessRequest(applId, staffid,"approved");
-        ApplicationResponseForAdmin processed = AdminApi.processApplication(processRequest);
+        Response response = AdminApi.processApplication(processRequest);
+        ApplicationResponseForAdmin processedData = response.jsonPath().getObject("data", ApplicationResponseForAdmin.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(processed, "data = null");
-        softAssert.assertEquals(processed.getStatusofapplication(), "approved",
-                "Статус не 'approved', а: " + processed.getStatusofapplication());
-        softAssert.assertEquals(processed.getApplicationid(), applId,
+        softAssert.assertEquals(response.getStatusCode(),200);
+        softAssert.assertNotNull(processedData, "data = null");
+        softAssert.assertEquals(processedData.getStatusofapplication(), "approved",
+                "Статус не 'approved', а: " + processedData.getStatusofapplication());
+        softAssert.assertEquals(processedData.getApplicationid(), applId,
                 "applicationid не совпадает");
-        softAssert.assertNotNull(processed.getKindofapplication(),
+        softAssert.assertNotNull(processedData.getKindofapplication(),
                 "kindofapplication = null");
-
         softAssert.assertEquals(ApplicationRepository.getStatusById(applId),
                 "approved", "Статус в БД не изменился на 'approved'");
         softAssert.assertAll();
@@ -69,14 +70,16 @@ public class AdminProcessApplicationTest {
     @TmsLink("188")
     public void changedStatusToRejectedByAdmin() {
         AdminProcessRequest processRequest = AdminBuilder.adminProcessRequest(applId, staffid,"rejected");
-        ApplicationResponseForAdmin processed = AdminApi.processApplication(processRequest);
+        Response response = AdminApi.processApplication(processRequest);
+        ApplicationResponseForAdmin processedData = response.jsonPath().getObject("data", ApplicationResponseForAdmin.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(processed, "data = null");
-        softAssert.assertEquals(processed.getStatusofapplication(), "rejected",
-                "Статус не 'rejected', а: " + processed.getStatusofapplication());
-        softAssert.assertEquals(processed.getApplicationid(), applId,
+        softAssert.assertEquals(response.getStatusCode(),200);
+        softAssert.assertNotNull(processedData, "data = null");
+        softAssert.assertEquals(processedData.getStatusofapplication(), "rejected",
+                "Статус не 'rejected', а: " + processedData.getStatusofapplication());
+        softAssert.assertEquals(processedData.getApplicationid(), applId,
                 "applicationid не совпадает");
-        softAssert.assertNotNull(processed.getKindofapplication(),
+        softAssert.assertNotNull(processedData.getKindofapplication(),
                 "kindofapplication = null");
         softAssert.assertEquals(ApplicationRepository.getStatusById(applId),
                 "rejected", "Статус в БД не изменился на 'rejected'");

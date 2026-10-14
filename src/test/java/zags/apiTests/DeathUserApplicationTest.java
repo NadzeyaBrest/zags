@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -36,9 +37,12 @@ public class DeathUserApplicationTest {
     @TmsLink("182")
     public void checkCreateDeathUserApplication() {
         UserCreateRequest userAppDeath = UserBuilder.userDeathRequest();
-        UserCreateResponceApp createdDeathApplication = UserApi.sendUserRequest(userAppDeath);
+        Response response = UserApi.sendUserRequest(userAppDeath);
+        UserCreateResponceApp createdDeathApplication =response.jsonPath()
+                .getObject("data", UserCreateResponceApp.class);
          appId = createdDeathApplication.getApplicationid();
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(response.getStatusCode(),200);
         softAssert.assertNotNull(createdDeathApplication, "data = null");
         softAssert.assertTrue(createdDeathApplication.getApplicationid() > 0,
                 "applicationid = " + createdDeathApplication.getApplicationid());
