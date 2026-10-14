@@ -1,7 +1,5 @@
 package zags.data;
 
-import zags.api.models.AdminProcessRequest;
-import zags.api.models.AdminRequest;
 import zags.api.models.UserCreateRequest;
 
 public class UserBuilder {

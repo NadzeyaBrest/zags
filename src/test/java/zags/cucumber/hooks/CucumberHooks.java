@@ -13,14 +13,14 @@ public class CucumberHooks {
     String password = dotenv.get("TEST_PASSWORD");
     String BASE_URL = dotenv.get("BASE_URL");
 
-    @Before
+    @Before("@ui")
     public void SetUp() {
         driver = DriverManager.getInstance().getDriver();
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);
         driver.get(authorizedUrl);
     }
 
-    @After
+    @After ("@ui")
     public void tearDown() {
         DriverManager.getInstance().closeDriver();
     }

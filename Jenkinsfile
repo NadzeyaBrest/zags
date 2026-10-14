@@ -44,15 +44,13 @@ pipeline {
 
         stage('Run tests') {
             steps {
-                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
                     script {
                         if (isUnix()) {
-                            sh 'mvn -B clean test -Dmaven.test.failure.ignore=true'
+                            sh 'mvn -B clean test'
                         } else {
-                            bat 'mvn -B clean test -Dmaven.test.failure.ignore=true'
+                            bat 'mvn -B clean test'
                         }
                     }
-                }
             }
         }
     }
@@ -61,7 +59,6 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'target/logs/**', allowEmptyArchive: true
             archiveArtifacts artifacts: 'target/cucumber-reports/**', allowEmptyArchive: true
-
             emailext(
                 subject: "ZAGS: прогон #${BUILD_NUMBER} — ${currentBuild.currentResult}",
                 mimeType: 'text/html',

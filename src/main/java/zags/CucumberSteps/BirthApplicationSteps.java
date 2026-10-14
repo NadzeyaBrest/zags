@@ -1,4 +1,4 @@
-package zags.cucumber.steps;
+package zags.CucumberSteps;
 
 
 import io.cucumber.java.en.And;
@@ -8,9 +8,10 @@ import io.cucumber.java.en.When;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import zags.core.DriverManager;
-import zags.data.TestData;
+import zags.core.TestDataForCucumber;
 import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.user.ApplicantDataPage;
@@ -23,7 +24,6 @@ public class BirthApplicationSteps {
     private static final Logger log = LogManager.getLogger(BirthApplicationSteps.class);
     private WebDriver driver = DriverManager.getInstance().getDriver();
     private Application app;
-
     private MainPage mainPage;
     private ApplicantDataPage applicantDataPage;
     private ServiceSelectionPage serviceSelectionPage;
@@ -41,7 +41,7 @@ public class BirthApplicationSteps {
     @When("пользователь заполняет данные заявителя")
     public void userFillApplicantData() {
         log.info("Шаг2: пользователь заполняет данные заявителя (рождение)");
-        app = TestData.getBirthApplication();
+        app = TestDataForCucumber.getBirthApplication();
         serviceSelectionPage = applicantDataPage.applicantFillAndNext(app);
     }
 
@@ -63,15 +63,17 @@ public class BirthApplicationSteps {
         statusPage = birthServiceDataPage.birthServiceFillAndFinish(app);
     }
 
-    @Then("на странице статуса отображается номер заявки и статус На рассмотрении")
-        public void verifyStatusPage () {
-        log.info("Шаг5:на странице статуса отображается номер заявки и статус На рассмотрении,(рождение)");
-            String number = statusPage.getApplicationNumber();
-            String status = statusPage.getStatus();
-            SoftAssert softAssert = new SoftAssert();
-            softAssert.assertFalse(number.isEmpty(), "Номер заявки пустой");
-            softAssert.assertEquals(status, "На рассмотрении", "Неверный статус заявки");
-            softAssert.assertAll();
-        }
-
+    @Then("на странице статуса отображается номер заявки")
+    public void verifyApplicationNumber() {
+        log.info("Шаг5.1:на странице статуса отображается номер заявки");
+        String number = statusPage.getApplicationNumber();
+        Assert.assertFalse(number.isEmpty(), "Номер заявки пустой");
     }
+
+    @And("статус заявки равен {string}")
+    public void verifyApplicationStatus(String status) {
+        log.info("Шаг 5.2: Проверка статуса заявки. Ожидаем: {}", status);
+        String actualStatus = statusPage.getStatus();
+        Assert.assertEquals(actualStatus, status, "Неверный статус заявки");
+    }
+}
