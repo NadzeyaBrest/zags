@@ -12,14 +12,6 @@ pipeline {
     options {
         timestamps()
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '10'))
-        allure([
-            includeProperties: false,
-            jdk: '',
-            commandline: 'allure',
-            properties: [],
-            reportBuildPolicy: 'ALWAYS',
-            results: [[path: 'target/allure-results']]
-        ])
     }
     stages {
         stage('Checkout') {
@@ -57,6 +49,14 @@ pipeline {
 
     post {
         always {
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    commandline: 'allure',
+                    properties: [],
+                    reportBuildPolicy: 'ALWAYS',
+                    results: [[path: 'target/allure-results']]
+                ])
             archiveArtifacts artifacts: 'target/logs/**', allowEmptyArchive: true
             archiveArtifacts artifacts: 'target/cucumber-reports/**', allowEmptyArchive: true
             emailext(
