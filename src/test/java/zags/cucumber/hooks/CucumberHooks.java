@@ -3,8 +3,12 @@ package zags.cucumber.hooks;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
 import zags.core.DriverManager;
+import zags.tests.BaseTest;
 
 public class CucumberHooks {
     protected WebDriver driver;
@@ -12,9 +16,17 @@ public class CucumberHooks {
     String username = dotenv.get("TEST_USERNAME");
     String password = dotenv.get("TEST_PASSWORD");
     String BASE_URL = dotenv.get("BASE_URL");
+    protected static final Logger log = LogManager.getLogger(CucumberHooks.class);
 
     @Before("@ui")
-    public void SetUp() {
+    public void SetUp(ITestContext context) {
+
+        String browser = context.getCurrentXmlTest().getParameter("browser");
+        if (browser == null || browser.isEmpty()) {
+            browser = "chrome";
+        }
+        System.setProperty("browser",browser );
+        log.debug("Старт теста. Браузер: {}", browser);
         driver = DriverManager.getInstance().getDriver();
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);
         driver.get(authorizedUrl);

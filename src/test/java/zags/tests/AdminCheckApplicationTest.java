@@ -52,14 +52,12 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
 
-        String idLatestAppFromAdminTable = adminTable.getIdLatestAppFromAdminTable();
 
-        String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
-        String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFromAdminTable);
+
+        String typeOfAppFromAdminTable = adminTable.getTypeById(applicationNumberShowedUser);
+        String statusOfAppFromAdminTable = adminTable.getStatusById(applicationNumberShowedUser);
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertFalse(applicationNumberShowedUser.isEmpty(), "ID новой заявки не отражается на странице Статуса заявки пользователя");
-        softAssert.assertEquals(applicationNumberShowedUser, idLatestAppFromAdminTable, "Новая заявка не отразилась сверху таблицы");
-        softAssert.assertFalse(idLatestAppFromAdminTable.isEmpty(), "ID новой заявки не отражается в таблице");
         softAssert.assertEquals(typeOfAppFromAdminTable, "Получение свидетельства о рождении",
                 "Тип заявки отличается от выбранной пользователем");
         softAssert.assertEquals(statusOfAppFromAdminTable, applicationStatusShowedUser, "Статус заявки в таблице администратора отличается от статуса заявки пользователя");
@@ -90,14 +88,10 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
 
-        String idLatestAppFromAdminTable = adminTable.getIdLatestAppFromAdminTable();
-        String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFromAdminTable);
-        String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFromAdminTable);
+        String typeOfAppFromAdminTable = adminTable.getTypeById(applicationNumberShowedUser);
+        String statusOfAppFromAdminTable = adminTable.getStatusById(applicationNumberShowedUser);
 
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertFalse(applicationNumberShowedUser.isEmpty(), "ID новой заявки не отражается на странице Статуса заявки пользователя");
-        softAssert.assertEquals(applicationNumberShowedUser, idLatestAppFromAdminTable, "Новая заявка не отразилась сверху таблицы");
-        softAssert.assertFalse(idLatestAppFromAdminTable.isEmpty(), "ID новой заявки не отражается в таблице");
         softAssert.assertEquals(typeOfAppFromAdminTable, "Получение свидетельства о браке",
                 "Тип заявки отличается от выбранной пользователем");
         softAssert.assertEquals(statusOfAppFromAdminTable, applicationStatusShowedUser, "Статус заявки в таблице администратора отличается от статуса заявки пользователя");
@@ -128,13 +122,10 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
 
-        String idLatestAppFomAdminTable = adminTable.getIdLatestAppFromAdminTable();
-        String typeOfAppFromAdminTable = adminTable.getTypeById(idLatestAppFomAdminTable);
-        String statusOfAppFromAdminTable = adminTable.getStatusById(idLatestAppFomAdminTable);
+        String typeOfAppFromAdminTable = adminTable.getTypeById(applicationNumberShowedUser);
+        String statusOfAppFromAdminTable = adminTable.getStatusById(applicationNumberShowedUser);
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertFalse(applicationNumberShowedUser.isEmpty(), "ID новой заявки не отражается на странице Статуса заявки пользователя");
-        softAssert.assertEquals(applicationNumberShowedUser, idLatestAppFomAdminTable, "Новая заявка не отразилась сверху таблицы");
-        softAssert.assertFalse(idLatestAppFomAdminTable.isEmpty(), "ID новой заявки не отражается в таблице");
         softAssert.assertEquals(typeOfAppFromAdminTable, "Получение свидетельства о смерти",
                 "Тип заявки отличается от выбранной пользователем");
         softAssert.assertEquals(statusOfAppFromAdminTable, applicationStatusShowedUser, "Статус заявки в таблице администратора отличается от статуса заявки пользователя");

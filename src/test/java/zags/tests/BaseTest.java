@@ -4,6 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import zags.core.DriverManager;
@@ -18,7 +19,12 @@ public class BaseTest {
     String BASE_URL = dotenv.get("BASE_URL");
 
     @BeforeMethod(alwaysRun = true)
-    public void setUp() {
+    public void setUp(ITestContext context) {
+        String browser = context.getCurrentXmlTest().getParameter("browser");
+        if (browser == null || browser.isEmpty()) {
+            browser = "chrome";
+        }
+        System.setProperty("browser", browser);
         log.debug("Старт теста. Открываем браузер ");
         driver = DriverManager.getInstance().getDriver();
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);

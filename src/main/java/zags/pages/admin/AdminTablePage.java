@@ -117,15 +117,6 @@ public class AdminTablePage {
         return type;
     }
 
-    @Step("Получить ID последней заявки из таблицы")
-    public String getIdLatestAppFromAdminTable() {
-        log.info("Получаем ID последней заявки из таблицы");
-        Wait.createWait(driver, SHORT_TIMEOUT)
-                .until(d -> !applicationRows.isEmpty());
-        String id = getCellText(applicationRows.get(0), COLUMN_NUMBER_AS_IMPLEMENTED);
-        log.info("ID последней заявки: {}", id);
-        return id;
-    }
 
     @Step("Обновить таблицу заявок")
     public AdminTablePage refresh() {
