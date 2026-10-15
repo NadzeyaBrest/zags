@@ -6,7 +6,7 @@ import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
         features = "src/test/resources/features/BirthApplication.feature",
-        glue = "zags.cucumber",
+        glue = {"zags.cucumber", "zags.CucumberSteps"},
         plugin = {
                 "pretty",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",

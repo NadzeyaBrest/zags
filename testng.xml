@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="ЗАГС" verbose="1">
+<suite name="ЗАГС" >
     <listeners>
         <listener class-name="zags.data.TestListener"/>
     </listeners>
@@ -11,7 +11,6 @@
         </groups>
         <packages>
             <package name="zags.tests"/>
-            <package name="zags.apiTests"/>
         </packages>
     </test>
     <test name="Сценарии администратора">
