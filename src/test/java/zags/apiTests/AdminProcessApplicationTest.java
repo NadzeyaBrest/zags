@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -19,7 +20,8 @@ import zags.api.models.CreateAdminResponse;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.AdminBuilder;
+import zags.data.UserBuilder;
 
 @Epic("API администратора")
 @Feature("Обработка заявок")
@@ -30,11 +32,11 @@ public class AdminProcessApplicationTest {
 
     @BeforeMethod(alwaysRun = true)
     public void prepareApplicationId() {
-        UserCreateRequest userRequest = Builders.userWeddingRequest();
-        UserCreateResponceApp createdApp = UserApi.sendUserRequest(userRequest);
+        UserCreateRequest userRequest = UserBuilder.userWeddingRequest();
+        UserCreateResponceApp createdApp = UserApi.sendUserRequest(userRequest).jsonPath().getObject("data", UserCreateResponceApp.class);
         applId = createdApp.getApplicationid();
-        AdminRequest adminRequest = Builders.admin();
-        CreateAdminResponse admin = AdminApi.sendAdminRequest(adminRequest);
+        AdminRequest adminRequest = AdminBuilder.admin();
+        CreateAdminResponse admin = AdminApi.sendAdminRequest(adminRequest).jsonPath().getObject("data", CreateAdminResponse.class);
         staffid = admin.getStaffid();
     }
 
@@ -44,17 +46,18 @@ public class AdminProcessApplicationTest {
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("187")
     public void changedStatusToApprovedByAdmin() {
-        AdminProcessRequest processRequest = Builders.adminProcessRequest(applId, staffid,"approved");
-        ApplicationResponseForAdmin processed = AdminApi.processApplication(processRequest);
+        AdminProcessRequest processRequest = AdminBuilder.adminProcessRequest(applId, staffid,"approved");
+        Response response = AdminApi.processApplication(processRequest);
+        ApplicationResponseForAdmin processedData = response.jsonPath().getObject("data", ApplicationResponseForAdmin.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(processed, "data = null");
-        softAssert.assertEquals(processed.getStatusofapplication(), "approved",
-                "Статус не 'approved', а: " + processed.getStatusofapplication());
-        softAssert.assertEquals(processed.getApplicationid(), applId,
+        softAssert.assertEquals(response.getStatusCode(),200);
+        softAssert.assertNotNull(processedData, "data = null");
+        softAssert.assertEquals(processedData.getStatusofapplication(), "approved",
+                "Статус не 'approved', а: " + processedData.getStatusofapplication());
+        softAssert.assertEquals(processedData.getApplicationid(), applId,
                 "applicationid не совпадает");
-        softAssert.assertNotNull(processed.getKindofapplication(),
+        softAssert.assertNotNull(processedData.getKindofapplication(),
                 "kindofapplication = null");
-
         softAssert.assertEquals(ApplicationRepository.getStatusById(applId),
                 "approved", "Статус в БД не изменился на 'approved'");
         softAssert.assertAll();
@@ -66,15 +69,17 @@ public class AdminProcessApplicationTest {
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("188")
     public void changedStatusToRejectedByAdmin() {
-        AdminProcessRequest processRequest = Builders.adminProcessRequest(applId, staffid,"rejected");
-        ApplicationResponseForAdmin processed = AdminApi.processApplication(processRequest);
+        AdminProcessRequest processRequest = AdminBuilder.adminProcessRequest(applId, staffid,"rejected");
+        Response response = AdminApi.processApplication(processRequest);
+        ApplicationResponseForAdmin processedData = response.jsonPath().getObject("data", ApplicationResponseForAdmin.class);
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(processed, "data = null");
-        softAssert.assertEquals(processed.getStatusofapplication(), "rejected",
-                "Статус не 'rejected', а: " + processed.getStatusofapplication());
-        softAssert.assertEquals(processed.getApplicationid(), applId,
+        softAssert.assertEquals(response.getStatusCode(),200);
+        softAssert.assertNotNull(processedData, "data = null");
+        softAssert.assertEquals(processedData.getStatusofapplication(), "rejected",
+                "Статус не 'rejected', а: " + processedData.getStatusofapplication());
+        softAssert.assertEquals(processedData.getApplicationid(), applId,
                 "applicationid не совпадает");
-        softAssert.assertNotNull(processed.getKindofapplication(),
+        softAssert.assertNotNull(processedData.getKindofapplication(),
                 "kindofapplication = null");
         softAssert.assertEquals(ApplicationRepository.getStatusById(applId),
                 "rejected", "Статус в БД не изменился на 'rejected'");

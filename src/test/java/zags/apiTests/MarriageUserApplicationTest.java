@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -14,7 +15,7 @@ import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API заявок")
 @Feature("Создание заявки на брак")
@@ -29,16 +30,20 @@ public class MarriageUserApplicationTest {
             ApplicationRepository.deleteById(appId);
         }
     }
-    @Test(description = "Пользователь создаёт заявку на брак",         groups = {"API"})
+
+    @Test(description = "Пользователь создаёт заявку на брак", groups = {"API"})
     @Story("POST /sendUserRequest (wedding)")
     @Description("Заявка создаётся, возвращается merrigecertificateid")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("183")
     public void checkCreateMarriageUserApplication() {
-        UserCreateRequest userAppMarriage = Builders.userWeddingRequest();
-        UserCreateResponceApp createdMarriageApplication = UserApi.sendUserRequest(userAppMarriage);
+        UserCreateRequest userAppMarriage = UserBuilder.userWeddingRequest();
+        Response response = UserApi.sendUserRequest(userAppMarriage);
+        UserCreateResponceApp createdMarriageApplication = response.jsonPath()
+                .getObject("data", UserCreateResponceApp.class);
         appId = createdMarriageApplication.getApplicationid();
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(response.getStatusCode(), 200);
         softAssert.assertNotNull(createdMarriageApplication, "data = null");
         softAssert.assertTrue(createdMarriageApplication.getApplicationid() > 0,
                 "applicationid = " + createdMarriageApplication.getApplicationid());

@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -14,7 +15,7 @@ import zags.api.UserApi;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API заявок")
 @Feature("Создание заявки на рождение")
@@ -33,12 +34,14 @@ public class BirthUserApplicationTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("181")
     public void checkCreateBirthUserApplication() {
-        UserCreateRequest userAppBirth = Builders.userBirthRequest();
-        UserCreateResponceApp createdBirthApplication = UserApi.sendUserRequest(userAppBirth);
+        UserCreateRequest userAppBirth = UserBuilder.userBirthRequest();
+        Response response =UserApi.sendUserRequest(userAppBirth);
+        UserCreateResponceApp createdBirthApplication = response.jsonPath()
+                .getObject("data", UserCreateResponceApp.class);
         appId = createdBirthApplication.getApplicationid();
-
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(createdBirthApplication, "data = null");
+        softAssert.assertEquals(response.getStatusCode(),200);
         softAssert.assertTrue(createdBirthApplication.getApplicationid() > 0,
                 "applicationid = " + createdBirthApplication.getApplicationid());
         softAssert.assertTrue(createdBirthApplication.getApplicantid() > 0,

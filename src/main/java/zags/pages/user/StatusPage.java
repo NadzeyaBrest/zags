@@ -68,7 +68,6 @@ public class StatusPage {
     public String getApplicationNumber() {
         String number = statusApplicationNumberText.getText().replaceAll("\\D+", "");
         log.info("Номер заявки: '{}'", number);
-        Allure.parameter("Номер заявки", number);
         Allure.addAttachment("Номер заявки", "text/plain", number, ".txt");
         return number;
     }
@@ -80,7 +79,6 @@ public class StatusPage {
                 .replace(".", "")
                 .trim();
         log.info("Статус заявки: '{}'", status);
-        Allure.parameter("Статус заявки", status);
         Allure.addAttachment("Статус заявки", "text/plain", status, ".txt");
         return status;
     }

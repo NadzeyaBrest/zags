@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -14,7 +15,7 @@ import zags.api.AdminApi;
 import zags.api.UserApi;
 import zags.api.models.ApplicationResponseForAdmin;
 import zags.api.models.UserCreateResponceApp;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,8 @@ public class ApplicationsTest {
 
     @BeforeMethod(alwaysRun = true)
     public void prepare() {
-        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(Builders.userWeddingRequest());
+        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(UserBuilder.userWeddingRequest()).jsonPath()
+                .getObject("data", UserCreateResponceApp.class);;
         appId = createdApplication.getApplicationid();
     }
 
@@ -38,8 +40,9 @@ public class ApplicationsTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("185")
     public void checkApplications() {
-
-        List<ApplicationResponseForAdmin> applications = AdminApi.getAllApplication();
+        Response response = AdminApi.getAllApplication();
+        List<ApplicationResponseForAdmin> applications = response.jsonPath()
+                .getList("data", ApplicationResponseForAdmin.class);
         List<String> allowedStatuses = List.of("approved", "under consideration", "rejected");
         boolean newAppFound = applications.stream()
                 .anyMatch(ap -> Objects.equals(ap.getApplicationid(), appId));
@@ -47,6 +50,7 @@ public class ApplicationsTest {
         List<Integer> ids = applications.stream().map(ApplicationResponseForAdmin::getApplicationid).toList();
         long uniqueCount = ids.stream().distinct().count();
         SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(response.getStatusCode(),200);
         softAssert.assertTrue(newAppFound,
                 "Свежая заявка id=" + appId + " не найдена в списке");
         softAssert.assertFalse(applications.isEmpty());

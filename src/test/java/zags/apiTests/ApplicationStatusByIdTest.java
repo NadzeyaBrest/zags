@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -14,7 +15,7 @@ import zags.api.AdminApi;
 import zags.api.UserApi;
 import zags.api.models.ApplicationByIdResponse;
 import zags.api.models.UserCreateResponceApp;
-import zags.data.Builders;
+import zags.data.UserBuilder;
 
 @Epic("API администратора")
 @Feature("Статус заявки по ID")
@@ -23,7 +24,7 @@ public class ApplicationStatusByIdTest {
     private Integer appId;
     @BeforeMethod(alwaysRun = true)
     public void prepareApplication() {
-        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(Builders.userWeddingRequest());
+        UserCreateResponceApp createdApplication = UserApi.sendUserRequest(UserBuilder.userWeddingRequest()).jsonPath().getObject("data", UserCreateResponceApp.class);;
         appId = createdApplication.getApplicationid();
     }
     @Test(description = "Проверить статус заявки по ID", groups = {"API"})
@@ -32,10 +33,11 @@ public class ApplicationStatusByIdTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("184")
     public void checkStatusById() {
-        ApplicationByIdResponse applicationStatus = AdminApi.getApplicationById(appId);
-
+        Response response = AdminApi.getApplicationById(appId);
+        ApplicationByIdResponse applicationStatus = response.jsonPath().getObject("data", ApplicationByIdResponse.class); ;
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(applicationStatus, "data = null");
+        softAssert.assertEquals (response.getStatusCode(),200);
         softAssert.assertEquals(applicationStatus.getStatusofapplication(), "under consideration",
                 "Свежая заявка должна быть 'under consideration'");
         softAssert.assertEquals(applicationStatus.getKindofapplication(),

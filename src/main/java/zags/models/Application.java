@@ -106,4 +106,13 @@ public class Application {
 
     public Application deathDate(String v)              { this.deathDate = v; return this; }
     public Application deathPlace(String v)             { this.deathPlace = v; return this; }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "serviceType=" + serviceType +
+                ", personalLastName='" + personalLastName + '\'' +
+                ", personalFirstName='" + personalFirstName + '\'' +
+                '}';
+    }
 }

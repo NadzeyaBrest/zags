@@ -7,6 +7,7 @@ import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import io.restassured.response.Response;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -15,7 +16,7 @@ import zags.api.models.AdminRequest;
 import zags.api.models.CreateAdminResponse;
 import zags.core.ApplicationRepository;
 import zags.core.StaffRepository;
-import zags.data.Builders;
+import zags.data.AdminBuilder;
 
 @Epic("API администратора")
 @Feature("Создание администратора")
@@ -37,11 +38,13 @@ public class AdminCreationTest {
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("186")
     public void checkCreateAdmin() {
-        AdminRequest admin = Builders.admin();
-        CreateAdminResponse response = AdminApi.sendAdminRequest(admin);
+        AdminRequest admin = AdminBuilder.admin();
+        Response adminResponse = AdminApi.sendAdminRequest(admin);
+        CreateAdminResponse response = adminResponse.jsonPath().getObject("data", CreateAdminResponse.class);
         staffId = response.getStaffid();
         SoftAssert soft = new SoftAssert();
         soft.assertNotNull(response, "response = null");
+        soft.assertEquals(adminResponse.getStatusCode(),200);
         soft.assertNotNull(response.getStaffid(),
                 "staffid = null");
         soft.assertTrue(response.getStaffid() > 0,
