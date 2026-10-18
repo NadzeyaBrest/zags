@@ -18,6 +18,7 @@ public class DriverManager {
     private static DriverManager instance;
     private static final Logger log = LogManager.getLogger(DriverManager.class);
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<String> currentBrowser = new ThreadLocal<>();
 
     private DriverManager() {
         log.debug("DriverManager создан ");
@@ -31,17 +32,32 @@ public class DriverManager {
         return instance;
     }
 
-    public  WebDriver getDriver() {
+    public static String getCurrentBrowser() {
+        return currentBrowser.get();
+    }
+
+    public WebDriver getDriver() {
+        if (driverThreadLocal.get() != null) {
+            return driverThreadLocal.get();
+        }
+        return getDriver(System.getProperty("browser"));
+    }
+
+    public WebDriver getCurrentDriver() {
+        return driverThreadLocal.get();
+    }
+
+    public WebDriver getDriver(String browserParam) {
         if (driverThreadLocal.get() == null) {
-            // 1. Определяем браузер: TestNG-параметр → env → chrome по умолчанию
-            String browser = System.getProperty("browser");
+
+            String browser = browserParam;
             if (browser == null || browser.isEmpty()) {
                 browser = System.getenv("BROWSER");
             }
             if (browser == null || browser.isEmpty()) {
                 browser = "chrome";
             }
-
+            currentBrowser.set(browser.toLowerCase());
             log.debug("Создаём RemoteWebDriver для Selenoid, браузер={}, поток={}",
                     browser, Thread.currentThread().getId());
 
@@ -49,23 +65,26 @@ public class DriverManager {
             switch (browser.toLowerCase()) {
                 case "firefox":
                     options = new FirefoxOptions();
+                    options.setCapability("browserName", "firefox");
                     break;
                 case "edge":
                     options = new EdgeOptions();
+                    options.setCapability("browserName", "MicrosoftEdge");
                     break;
                 case "chrome":
                 default:
                     options = new ChromeOptions();
+                    options.setCapability("browserName", "chrome");
                     break;
             }
-
 
             Map<String, Object> selenoidOptions = new HashMap<>();
             selenoidOptions.put("sessionTimeout", "5m");
             selenoidOptions.put("enableVNC", true);
-            selenoidOptions.put("enableVideo", true);
+            selenoidOptions.put("enableVideo", false);
             selenoidOptions.put("name", "Test in thread " + Thread.currentThread().getId() + " on " + browser);
             options.setCapability("selenoid:options", selenoidOptions);
+            log.info("Итоговый browserName = {}", options.getCapability("browserName"));
             String selenoidUrl = System.getenv("SELENOID_URL");
             if (selenoidUrl == null || selenoidUrl.isEmpty()) {
                 selenoidUrl = "http://localhost:4444/wd/hub";
@@ -88,5 +107,6 @@ public class DriverManager {
             driverThreadLocal.get().quit();
             driverThreadLocal.remove();
         }
+        currentBrowser.remove();
     }
 }

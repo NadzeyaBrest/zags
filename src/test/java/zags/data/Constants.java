@@ -9,6 +9,4 @@ public class Constants {
     public static final String COLUMN_STATUS = "Статус";
     public static final String COLUMN_ACTION = "Действие";
     public static final String STATUS_IN_PROGRESS = "На рассмотрении";
-    public static final String COLUMN_NUMBER_AS_IMPLEMENTED = "№";
-    public static final String COLUMN_TYPE_AS_IMPLEMENTED = "Тип";
 }

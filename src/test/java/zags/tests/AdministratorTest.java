@@ -41,7 +41,7 @@ public class AdministratorTest extends BaseTest {
         Assert.assertEquals(mode, ADMIN_ROLE);
     }
 
-    @Test( groups = {"admin"},description = "Проверка заголовков таблицы по ТЗ", enabled = false) //  заголовки не соответствуют ТЗ
+    @Test( groups = {"admin"},description = "Проверка заголовков таблицы по ТЗ") //  заголовки не соответствуют ТЗ
     @Story("Проверка заголовков таблицы по ТЗ")
     @Description("Проверяем, что заголовки колонок таблицы соответствуют требованиям ТЗ")
     @TmsLink("156")
@@ -51,22 +51,6 @@ public class AdministratorTest extends BaseTest {
         softAssert.assertTrue(headers.contains(COLUMN_APPLICATION_NUMBER), String.format("Нет столбца %s", COLUMN_APPLICATION_NUMBER));
         softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), String.format("Нет столбца %s", COLUMN_APPLICANT));
         softAssert.assertTrue(headers.contains(COLUMN_SERVICE_TYPE), String.format("Нет столбца %s", COLUMN_SERVICE_TYPE));
-        softAssert.assertTrue(headers.contains(COLUMN_TIME), String.format("Нет столбца %s", COLUMN_TIME));
-        softAssert.assertTrue(headers.contains(COLUMN_STATUS), String.format("Нет столбца %s", COLUMN_STATUS));
-        softAssert.assertTrue(headers.contains(COLUMN_ACTION), String.format("Нет столбца %s", COLUMN_ACTION));
-        softAssert.assertAll();
-    }
-
-    @Story("Проверка фактических заголовков таблицы")
-    @Test(  description = "Проверка фактических заголовков таблицы",groups = {"admin"})
-    @TmsLink("156")
-    public void checkAdminTableColumnsAsImplemented() {
-
-        List<String> headers = adminTable.getColumnHeaders();
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertTrue(headers.contains(COLUMN_NUMBER_AS_IMPLEMENTED), String.format("Нет столбца %s", COLUMN_APPLICATION_NUMBER));
-        softAssert.assertTrue(headers.contains(COLUMN_APPLICANT), String.format("Нет столбца %s", COLUMN_APPLICANT));
-        softAssert.assertTrue(headers.contains(COLUMN_TYPE_AS_IMPLEMENTED), String.format("Нет столбца %s", COLUMN_SERVICE_TYPE));
         softAssert.assertTrue(headers.contains(COLUMN_TIME), String.format("Нет столбца %s", COLUMN_TIME));
         softAssert.assertTrue(headers.contains(COLUMN_STATUS), String.format("Нет столбца %s", COLUMN_STATUS));
         softAssert.assertTrue(headers.contains(COLUMN_ACTION), String.format("Нет столбца %s", COLUMN_ACTION));

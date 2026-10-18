@@ -43,7 +43,7 @@ public class DeathServiceDataPage {
     public StatusPage deathServiceFillAndFinish(Application app) {
         deathDate.sendKeys(app.getDeathDate());
         deathPlace.sendKeys(app.getDeathPlace());
-        Wait.waitClickable(driver, deathFinishButton, SHORT_TIMEOUT);
+        Wait.waitClickable(driver, deathFinishButton, Wait.browserTimeout());
         deathFinishButton.click();
         log.info("Данные услуги (смерть) отправлены");
         return new StatusPage(driver);

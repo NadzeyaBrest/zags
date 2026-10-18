@@ -50,5 +50,11 @@ public class Admin {
     public Admin passportNumber(String v) { this.passportNumber = v; return this; }
     public Admin birthDate(String v) { this.birthDate = v; return this; }
 
-
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "lastName='" + getLastName() + '\'' +
+                ", firstName='" + getFirstName() + '\'' +
+                '}';
+    }
 }

@@ -1,9 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="MultiBrowser" verbose="1" parallel="tests" thread-count="2">
-
-    <listeners>
-        <listener class-name="zags.data.TestListener"/>
-    </listeners>
+<suite name="MultiBrowser" verbose="1" parallel="tests" thread-count="3">
 
     <test name="Chrome - UI Tests">
         <parameter name="browser" value="chrome"/>
@@ -15,8 +11,8 @@
     <test name="Firefox - UI Tests">
         <parameter name="browser" value="firefox"/>
         <packages>
-            <package name="zags.tests"/>
-        </packages>
+                <package name="zags.tests"/>
+         </packages>
     </test>
 
     <test name="Edge - UI Tests">
@@ -26,4 +22,9 @@
         </packages>
     </test>
 
+    <test name="API Tests">
+        <packages>
+            <package name="zags.apiTests"/>
+        </packages>
+    </test>
 </suite>

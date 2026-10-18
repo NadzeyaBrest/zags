@@ -20,12 +20,11 @@ public class CucumberHooks {
 
     @Before("@ui")
     public void SetUp(ITestContext context) {
-
         String browser = context.getCurrentXmlTest().getParameter("browser");
         if (browser == null || browser.isEmpty()) {
             browser = "chrome";
         }
-        System.setProperty("browser",browser );
+
         log.debug("Старт теста. Браузер: {}", browser);
         driver = DriverManager.getInstance().getDriver();
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);

@@ -87,7 +87,6 @@ public class AdminCheckApplicationTest extends BaseTest {
         AdminTablePage adminTable = new MainPage(driver)
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
-
         String typeOfAppFromAdminTable = adminTable.getTypeById(applicationNumberShowedUser);
         String statusOfAppFromAdminTable = adminTable.getStatusById(applicationNumberShowedUser);
 
@@ -130,6 +129,97 @@ public class AdminCheckApplicationTest extends BaseTest {
                 "Тип заявки отличается от выбранной пользователем");
         softAssert.assertEquals(statusOfAppFromAdminTable, applicationStatusShowedUser, "Статус заявки в таблице администратора отличается от статуса заявки пользователя");
         softAssert.assertAll();
+    }
 
+    @Test(groups = {"crossRole"}, description = "Одобрение только что созданной заявки")
+    @Story("Админ одобряет заявку")
+    @Description("Пользователь создаёт заявку, админ находит её по ID, кликает 'Палец вверх' и проверяет новый статус")
+    @Severity(SeverityLevel.CRITICAL)
+    public void testApproveNewApplication() {
+        Application deathApp = TestData.getDeathApplication();
+        StatusPage deathStatusPage = mainPage
+                .selectUserMode()
+                .applicantFillAndNext(deathApp)
+                .selectDeath()
+                .deathCitizenFillAndNext(deathApp)
+                .deathServiceFillAndFinish(deathApp);
+        String appNumber = deathStatusPage.getApplicationNumber();
+        log.info("Создана новая заявка с номером: {}", appNumber);
+        deathStatusPage.clickStatusCloseButton();
+
+        Admin admin = TestData.getAdmin();
+        AdminTablePage adminTable = new MainPage(driver)
+                .selectAdminMode()
+                .adminRegistrationFillAndNext(admin);
+
+        adminTable.clickApproveById(appNumber);
+        adminTable.waitForStatusChange(appNumber, "Одобрена");
+        String newStatus = adminTable.getStatusById(appNumber);
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(newStatus, "Одобрена",
+                "Статус заявки №" + appNumber + " не изменился на 'Одобрена'");
+        softAssert.assertAll();
+    }
+
+    @Test(groups = {"crossRole"}, description = "Отклонение только что созданной заявки")
+    @Story("Админ отклоняет заявку")
+    @Description("Пользователь создаёт заявку, админ находит её по ID, кликает 'Палец вниз' и проверяет новый статус")
+    @Severity(SeverityLevel.CRITICAL)
+    public void testRejectNewApplication() {
+        Application marriageApp = TestData.getMarriageApplication();
+        StatusPage statusPage = mainPage
+                .selectUserMode()
+                .applicantFillAndNext(marriageApp)
+                .selectMarriage()
+                .marriageCitizenFillAndNext(marriageApp)
+                .marriageServiceFillAndFinish(marriageApp);
+
+        String appNumber = statusPage.getApplicationNumber();
+        log.info("Создана новая заявка с номером: {}", appNumber);
+        statusPage.clickStatusCloseButton();
+        Admin admin = TestData.getAdmin();
+        AdminTablePage adminTable = new MainPage(driver)
+                .selectAdminMode()
+                .adminRegistrationFillAndNext(admin);
+        adminTable.clickRejectById(appNumber);
+        adminTable.waitForStatusChange(appNumber, "Отклонена");
+        String newStatus = adminTable.getStatusById(appNumber);
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(newStatus, "Отклонена",
+                "Статус заявки №" + appNumber + " не изменился на 'Отклонена'");
+        softAssert.assertAll();
+    }
+    @Test(groups = {"crossRole"}, description = "Проверка появления новой заявки в таблице админа после нажатия 'Обновить'")
+    @Story("Обновление таблицы администратора")
+    @Description("Админ открывает таблицу, возвращается на главную, пользователь создает заявку, админ снова открывает таблицу, жмет 'Обновить' и видит новую заявку.")
+    @Severity(SeverityLevel.CRITICAL)
+    public void testRefreshShowsNewApplication() {
+        Admin admin = TestData.getAdmin();
+        AdminTablePage adminTable = new MainPage(driver)
+                .selectAdminMode()
+                .adminRegistrationFillAndNext(admin);
+        MainPage mainPageForUser = adminTable.clickAdminTableClose();
+        Application marriageApp = TestData.getMarriageApplication();
+        StatusPage statusPage = mainPageForUser
+                .selectUserMode()
+                .applicantFillAndNext(marriageApp)
+                .selectMarriage()
+                .marriageCitizenFillAndNext(marriageApp)
+                .marriageServiceFillAndFinish(marriageApp);
+
+        String appNumber = statusPage.getApplicationNumber();
+        log.info("Пользователь создал заявку: {}", appNumber);
+        MainPage mainPageForAdmin = statusPage.clickStatusCloseButton();
+        AdminTablePage adminTableRefreshed = mainPageForAdmin
+                .selectAdminModeAfterCloseButton();
+        log.info("Админ нажимает 'Обновить'");
+        adminTableRefreshed.refresh();
+
+        String typeFromTable = adminTableRefreshed.getTypeById(appNumber);
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(typeFromTable, "Получение свидетельства о браке",
+                "Заявка №" + appNumber + " не появилась в таблице после обновления");
+        softAssert.assertAll();
     }
 }
