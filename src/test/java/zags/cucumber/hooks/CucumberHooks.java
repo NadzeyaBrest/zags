@@ -6,9 +6,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
-import org.testng.ITestContext;
 import zags.core.DriverManager;
-import zags.tests.BaseTest;
 
 public class CucumberHooks {
     protected WebDriver driver;
@@ -19,14 +17,8 @@ public class CucumberHooks {
     protected static final Logger log = LogManager.getLogger(CucumberHooks.class);
 
     @Before("@ui")
-    public void SetUp(ITestContext context) {
-        String browser = context.getCurrentXmlTest().getParameter("browser");
-        if (browser == null || browser.isEmpty()) {
-            browser = "chrome";
-        }
-
-        log.debug("Старт теста. Браузер: {}", browser);
-        driver = DriverManager.getInstance().getDriver();
+    public void SetUp() {
+      driver = DriverManager.getInstance().getDriver();
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);
         driver.get(authorizedUrl);
     }

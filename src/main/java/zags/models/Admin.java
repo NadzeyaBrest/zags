@@ -52,9 +52,6 @@ public class Admin {
 
     @Override
     public String toString() {
-        return "Admin{" +
-                "lastName='" + getLastName() + '\'' +
-                ", firstName='" + getFirstName() + '\'' +
-                '}';
+        return String.format("Admin { lastName %s, firstName %s }", getLastName(), getFirstName());
     }
 }

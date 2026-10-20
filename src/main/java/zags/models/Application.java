@@ -109,10 +109,6 @@ public class Application {
 
     @Override
     public String toString() {
-        return "Application{" +
-                "serviceType=" + serviceType +
-                ", personalLastName='" + personalLastName + '\'' +
-                ", personalFirstName='" + personalFirstName + '\'' +
-                '}';
+        return String.format("Application {serviceType=%s, personalLastName = %s, personalFirstName=%s }", serviceType, personalLastName, personalFirstName);
     }
 }
