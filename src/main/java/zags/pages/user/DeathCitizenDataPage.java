@@ -64,7 +64,7 @@ public class DeathCitizenDataPage {
         deathCitizenGender.sendKeys(app.getCitizenGender());
         deathCitizenPassport.sendKeys(app.getCitizenPassport());
         deathCitizenAddress.sendKeys(app.getCitizenAddress());
-        Wait.waitClickable(driver, deathCitizenNextButton, SHORT_TIMEOUT);
+        Wait.waitClickable(driver, deathCitizenNextButton, Wait.browserTimeout());
         deathCitizenNextButton.click();
         log.info("Данные гражданина (смерть) отправлены");
         return new DeathServiceDataPage(driver);

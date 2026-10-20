@@ -12,7 +12,7 @@ public class TestData {
                 .middleName("Borisovich")
                 .phone("123456")
                 .passportNumber("Ba12345")
-                .birthDate("26.04.1990");
+                .birthDate("1925-01-15");
     }
     public static Application getBirthApplication() {
         return new Application(ServiceType.BIRTH)
@@ -25,7 +25,7 @@ public class TestData {
                 .citizenLastName("Ivanov")
                 .citizenFirstName("Petr")
                 .citizenMiddleName("Ivanovich")
-                .citizenBirthDate("15.01.2024")
+                .citizenBirthDate("1990-01-15")
                 .citizenGender("Муж")
                 .citizenPassport("АБ123456")
                 .citizenAddress("Brest, Sovetskaya 3/15")
@@ -47,16 +47,16 @@ public class TestData {
                 .citizenLastName("Gromov")
                 .citizenFirstName("Mark")
                 .citizenMiddleName("Ivanovich")
-                .citizenBirthDate("16.02.2020")
+                .citizenBirthDate("2000-09-16")
                 .citizenGender("Муж")
                 .citizenPassport("АБ123456")
                 .citizenAddress("Brest, Levaya 3/15")
-                .marriageDate("10.12.2026")
+                .marriageDate("2026-12-10")
                 .marriageNewLastName("Gromov")
                 .marriageSpouseLastName("Svetova")
                 .marriageSpouseFirstName("Svetlana")
                 .marriageSpouseMiddleName("Petrovana")
-                .marriageSpouseBirthDate("18.03.2019")
+                .marriageSpouseBirthDate("2000-02-16")
                 .marriageSpousePassport("АБ176543");
     }
 
@@ -71,11 +71,11 @@ public class TestData {
                 .citizenLastName("Vladi")
                 .citizenFirstName("Olga")
                 .citizenMiddleName("Ivanovna")
-                .citizenBirthDate("15.01.1925")
+                .citizenBirthDate("1925-02-18")
                 .citizenGender("Жен")
                 .citizenPassport("MA45689")
                 .citizenAddress("Minsk, Lesnaya, 3")
-                .deathDate("15.10.2026")
+                .deathDate("2026-10-22")
                 .deathPlace("Minsk");
     }
 }

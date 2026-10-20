@@ -3,6 +3,7 @@ package zags.pages.user;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -65,7 +66,7 @@ public class BirthCitizenDataPage {
         birthCitizenGender.sendKeys(app.getCitizenGender());
         birthCitizenPassport.sendKeys(app.getCitizenPassport());
         birthCitizenAddress.sendKeys(app.getCitizenAddress());
-        Wait.waitClickable(driver, birthCitizenNextButton, SHORT_TIMEOUT);
+        Wait.waitClickable(driver, birthCitizenNextButton,Wait.browserTimeout());
         birthCitizenNextButton.click();
         log.info("Данные гражданина (рождение) отправлены");
         return new BirthServiceDataPage(driver);

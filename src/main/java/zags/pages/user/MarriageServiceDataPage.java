@@ -52,7 +52,7 @@ public class MarriageServiceDataPage {
         this.driver = driver;
         PageFactory.initElements(driver, this);
         log.info("Открыта страница данных услуги (брак)");
-        Wait.waitVisibility(driver,marriageDate,SHORT_TIMEOUT);
+        Wait.waitVisibility(driver,marriageDate,Wait.browserTimeout());
     }
     @Step("Заполнить данные о браке и нажать Завершить")
     public StatusPage marriageServiceFillAndFinish(Application app) {
@@ -64,7 +64,7 @@ public class MarriageServiceDataPage {
         marriageSpouseMiddleName.sendKeys(app.getMarriageSpouseMiddleName());
         marriageSpouseBirthDate.sendKeys(app.getMarriageSpouseBirthDate());
         marriageSpousePassport.sendKeys(app.getMarriageSpousePassport());
-        Wait.waitClickable(driver,marriageFinishButton,SHORT_TIMEOUT);
+        Wait.waitClickable(driver,marriageFinishButton,Wait.browserTimeout());
         marriageFinishButton.click();
         log.info("Данные услуги (брак) отправлены");
         return new StatusPage(driver);

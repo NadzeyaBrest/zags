@@ -57,7 +57,7 @@ public class BirthServiceDataPage {
         birthFather.sendKeys(app.getBirthFather());
         birthGrandmother.sendKeys(app.getBirthGrandmother());
         birthGrandfather.sendKeys(app.getBirthGrandfather());
-        Wait.waitClickable(driver, birthFinishButton, SHORT_TIMEOUT);
+        Wait.waitClickable(driver, birthFinishButton, Wait.browserTimeout());
         birthFinishButton.click();
         log.info("Данные услуги (рождение) отправлены");
         return new StatusPage(driver);

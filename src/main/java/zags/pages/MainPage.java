@@ -9,6 +9,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import zags.core.Wait;
 import zags.pages.admin.AdminRegistrationPage;
+import zags.pages.admin.AdminTablePage;
 import zags.pages.user.ApplicantDataPage;
 
 
@@ -48,5 +49,11 @@ public class MainPage {
         return new AdminRegistrationPage(driver);
     }
 
+    @Step("Войти как администратор повторно")
+    public AdminTablePage selectAdminModeAfterCloseButton() {
+        log.info("Клик: Войти как администратор повторно (переход на страницу Таблицы заявок)");
+        adminModeButton.click();
+        return new AdminTablePage(driver);
+    }
 
 }

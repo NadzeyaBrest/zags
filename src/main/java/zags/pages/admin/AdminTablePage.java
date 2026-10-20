@@ -117,16 +117,38 @@ public class AdminTablePage {
         return type;
     }
 
-    @Step("Получить ID последней заявки из таблицы")
-    public String getIdLatestAppFromAdminTable() {
-        log.info("Получаем ID последней заявки из таблицы");
-        Wait.createWait(driver, SHORT_TIMEOUT)
-                .until(d -> !applicationRows.isEmpty());
-        String id = getCellText(applicationRows.get(0), COLUMN_NUMBER_AS_IMPLEMENTED);
-        log.info("ID последней заявки: {}", id);
-        return id;
+    @Step("Одобрить заявку (Палец вверх) по ID: {id}")
+    public AdminTablePage clickApproveById(String id) {
+        log.info("Клик по кнопке 'Палец вверх' для заявки {}", id);
+        WebElement row = getApplicationRowById(id);
+        List<WebElement> buttons = row.findElements(By.xpath(".//button"));
+        if (!buttons.isEmpty()) {
+            buttons.get(0).click();
+        } else {
+            throw new RuntimeException("Кнопки действий не найдены в строке " + id);
+        }
+        return this;
     }
 
+    @Step("Отклонить заявку (Палец вниз) по ID: {id}")
+    public AdminTablePage clickRejectById(String id) {
+        log.info("Клик по кнопке 'Палец вниз' для заявки {}", id);
+        WebElement row = getApplicationRowById(id);
+        List<WebElement> buttons = row.findElements(By.xpath(".//button"));
+        if (buttons.size() > 1) {
+            buttons.get(1).click();
+        } else {
+            throw new RuntimeException("Кнопка 'Палец вниз' не найдена в строке " + id);
+        }
+        return this;
+    }
+    @Step("Ожидать смены статуса заявки ID: {id} на '{expectedStatus}'")
+    public void waitForStatusChange(String id, String expectedStatus) {
+        log.info("Ждем, пока статус заявки {} станет '{}'", id, expectedStatus);
+        int statusColumnIndex = getColumnIndexByHeaders(COLUMN_STATUS);
+        String xpath = String.format("//tr[td[1][text()='%s']]/td[%d]", id, statusColumnIndex);
+        Wait.waitTextToBe(driver, By.xpath(xpath), expectedStatus, 10);
+    }
     @Step("Обновить таблицу заявок")
     public AdminTablePage refresh() {
         log.info("Клик: Обновить таблицу заявок");

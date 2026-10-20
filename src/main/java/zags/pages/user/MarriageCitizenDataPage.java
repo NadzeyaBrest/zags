@@ -64,7 +64,7 @@ public class MarriageCitizenDataPage {
         marriageCitizenGender.sendKeys(app.getCitizenGender());
         marriageCitizenPassport.sendKeys(app.getCitizenPassport());
         marriageCitizenAddress.sendKeys(app.getCitizenAddress());
-        Wait.waitClickable(driver, marriageCitizenNextButton, SHORT_TIMEOUT);
+        Wait.waitClickable(driver, marriageCitizenNextButton, Wait.browserTimeout());
         marriageCitizenNextButton.click();
         log.info("Данные гражданина (брак) отправлены");
         return new MarriageServiceDataPage(driver);

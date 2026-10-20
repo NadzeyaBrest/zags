@@ -59,7 +59,7 @@ public class ApplicantDataPage {
         applicantPhone.sendKeys(app.getPersonalPhone());
         applicantPassport.sendKeys(app.getPersonalPassport());
         applicantAddress.sendKeys(app.getPersonalAddress());
-        Wait.waitClickable(driver, applicantPageNextButton, SHORT_TIMEOUT);
+        Wait.waitClickable(driver, applicantPageNextButton, Wait.browserTimeout());
         applicantPageNextButton.click();
         log.info("Данные заявителя отправлены, открывается страница выбора услуги");
         return new ServiceSelectionPage(driver);
