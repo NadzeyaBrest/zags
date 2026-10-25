@@ -21,6 +21,7 @@ import static zags.core.Constants.CLOSE;
 import static zags.core.Constants.COLUMN_NUMBER_AS_IMPLEMENTED;
 import static zags.core.Constants.COLUMN_STATUS;
 import static zags.core.Constants.COLUMN_TYPE_AS_IMPLEMENTED;
+import static zags.core.Constants.MEDIUM_TIMEOUT;
 import static zags.core.Constants.REFRESH;
 import static zags.core.Constants.SHORT_TIMEOUT;
 
@@ -38,6 +39,9 @@ public class AdminTablePage {
     private WebElement adminMode;
     @FindBy(xpath = "//table//th")
     private List<WebElement> tableHeaders;
+    @FindBy(xpath = "//div[contains(@style, 'margin-top: 25%')]")
+    private WebElement spinner;
+
 
     public AdminTablePage(WebDriver driver) {
         this.driver = driver;
@@ -58,6 +62,7 @@ public class AdminTablePage {
         log.debug("Заголовки таблицы: {}", headers);
         return headers;
     }
+
     private Map<String, Integer> createColumnIndexMap() {
         List<String> headers = getColumnHeaders();
         Map<String, Integer> mapWithHeaders = new HashMap<>();
@@ -82,12 +87,14 @@ public class AdminTablePage {
                 .getText()
                 .trim();
     }
+
     @Step("Получить роль в шапке страницы")
     public String getMode() {
-        String mode =  adminMode.getText().trim();
+        String mode = adminMode.getText().trim();
         log.info("Роль в шапке: '{}'", mode);
         return mode;
     }
+
     @Step("Найти строку заявки по ID: {id}")
     public WebElement getApplicationRowById(String id) {
         log.debug("Ищем строку заявки по ID: {}", id);
@@ -101,6 +108,7 @@ public class AdminTablePage {
 
         throw new IllegalStateException("Заявка с ID " + id + " не найдена в таблице");
     }
+
     @Step("Получить статус заявки по ID: {id}")
     public String getStatusById(String id) {
         WebElement row = getApplicationRowById(id);
@@ -142,17 +150,20 @@ public class AdminTablePage {
         }
         return this;
     }
+
     @Step("Ожидать смены статуса заявки ID: {id} на '{expectedStatus}'")
     public void waitForStatusChange(String id, String expectedStatus) {
         log.info("Ждем, пока статус заявки {} станет '{}'", id, expectedStatus);
         int statusColumnIndex = getColumnIndexByHeaders(COLUMN_STATUS);
         String xpath = String.format("//tr[td[1][text()='%s']]/td[%d]", id, statusColumnIndex);
-        Wait.waitTextToBe(driver, By.xpath(xpath), expectedStatus, 10);
+        Wait.waitTextToBe(driver, By.xpath(xpath), expectedStatus, MEDIUM_TIMEOUT);
     }
+
     @Step("Обновить таблицу заявок")
     public AdminTablePage refresh() {
         log.info("Клик: Обновить таблицу заявок");
         adminTableRefreshButton.click();
+        Wait.waitInvisibility(driver, spinner, MEDIUM_TIMEOUT);
         return this;
     }
 

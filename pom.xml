@@ -140,7 +140,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>testng-multibrowser.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <argLine>
                         -Xmx512m

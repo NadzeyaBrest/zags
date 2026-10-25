@@ -36,28 +36,15 @@ public class DriverManager {
         return currentBrowser.get();
     }
 
-    public WebDriver getDriver() {
-        if (driverThreadLocal.get() != null) {
-            return driverThreadLocal.get();
-        }
-        return getDriver(System.getProperty("browser"));
-    }
-
-    public WebDriver getCurrentDriver() {
-        return driverThreadLocal.get();
-    }
-
     public WebDriver getDriver(String browserParam) {
         if (driverThreadLocal.get() == null) {
 
             String browser = browserParam;
             if (browser == null || browser.isEmpty()) {
-                browser = System.getenv("BROWSER");
-            }
-            if (browser == null || browser.isEmpty()) {
                 browser = "chrome";
             }
             currentBrowser.set(browser.toLowerCase());
+            Thread.currentThread().setName(browser);
             log.debug("Создаём RemoteWebDriver для Selenoid, браузер={}, поток={}",
                     browser, Thread.currentThread().getId());
 

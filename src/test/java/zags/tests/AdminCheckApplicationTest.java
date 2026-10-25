@@ -16,13 +16,14 @@ import zags.models.Application;
 import zags.pages.MainPage;
 import zags.pages.admin.AdminTablePage;
 import zags.pages.user.StatusPage;
+
 @Epic("Кросс-ролевые сценарии")
 @Feature("Проверка заявок администратором")
-@Test(testName =  "Проверка отображения заявок пользователя в таблице администратора")
+@Test(testName = "Проверка отображения заявок пользователя в таблице администратора")
 public class AdminCheckApplicationTest extends BaseTest {
     private MainPage mainPage;
 
-    @BeforeMethod (alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     public void init() {
         mainPage = new MainPage(driver);
     }
@@ -53,7 +54,6 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .adminRegistrationFillAndNext(admin);
 
 
-
         String typeOfAppFromAdminTable = adminTable.getTypeById(applicationNumberShowedUser);
         String statusOfAppFromAdminTable = adminTable.getStatusById(applicationNumberShowedUser);
         SoftAssert softAssert = new SoftAssert();
@@ -64,7 +64,7 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(groups = {"crossRole"},description =  "Проверка заявки на рождение администратором")
+    @Test(groups = {"crossRole"}, description = "Проверка заявки на рождение администратором")
     @Story("Админ проверяет заявку на брак")
     @Description("Пользователь создаёт заявку на брак, админ  проверяет её в таблице")
     @Severity(SeverityLevel.BLOCKER)
@@ -97,7 +97,7 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(groups = {"crossRole"},description = "Проверка заявки на смерть администратором")
+    @Test(groups = {"crossRole"}, description = "Проверка заявки на смерть администратором")
     @Story("Админ проверяет заявку на смерть")
     @Description("Пользователь создаёт заявку на смерть, админ проверяет её в таблице")
     @Severity(SeverityLevel.BLOCKER)
@@ -135,6 +135,7 @@ public class AdminCheckApplicationTest extends BaseTest {
     @Story("Админ одобряет заявку")
     @Description("Пользователь создаёт заявку, админ находит её по ID, кликает 'Палец вверх' и проверяет новый статус")
     @Severity(SeverityLevel.CRITICAL)
+    @TmsLink("161")
     public void testApproveNewApplication() {
         Application deathApp = TestData.getDeathApplication();
         StatusPage deathStatusPage = mainPage
@@ -165,6 +166,7 @@ public class AdminCheckApplicationTest extends BaseTest {
     @Story("Админ отклоняет заявку")
     @Description("Пользователь создаёт заявку, админ находит её по ID, кликает 'Палец вниз' и проверяет новый статус")
     @Severity(SeverityLevel.CRITICAL)
+    @TmsLink("162")
     public void testRejectNewApplication() {
         Application marriageApp = TestData.getMarriageApplication();
         StatusPage statusPage = mainPage
@@ -189,10 +191,12 @@ public class AdminCheckApplicationTest extends BaseTest {
                 "Статус заявки №" + appNumber + " не изменился на 'Отклонена'");
         softAssert.assertAll();
     }
+
     @Test(groups = {"crossRole"}, description = "Проверка появления новой заявки в таблице админа после нажатия 'Обновить'")
     @Story("Обновление таблицы администратора")
     @Description("Админ открывает таблицу, возвращается на главную, пользователь создает заявку, админ снова открывает таблицу, жмет 'Обновить' и видит новую заявку.")
     @Severity(SeverityLevel.CRITICAL)
+    @TmsLink("157")
     public void testRefreshShowsNewApplication() {
         Admin admin = TestData.getAdmin();
         AdminTablePage adminTable = new MainPage(driver)
@@ -213,6 +217,13 @@ public class AdminCheckApplicationTest extends BaseTest {
         AdminTablePage adminTableRefreshed = mainPageForAdmin
                 .selectAdminModeAfterCloseButton();
         log.info("Админ нажимает 'Обновить'");
+
+        try {
+            adminTableRefreshed.refresh();
+        } catch (Exception e) {
+            log.error("Не дождались загрузки таблицы. Cпиннер завис.");
+            throw new RuntimeException("Таблица не загрузилась: спиннер не пропадает", e);
+        }
         adminTableRefreshed.refresh();
 
         String typeFromTable = adminTableRefreshed.getTypeById(appNumber);

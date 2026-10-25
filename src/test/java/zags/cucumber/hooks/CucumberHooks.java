@@ -18,7 +18,8 @@ public class CucumberHooks {
 
     @Before("@ui")
     public void SetUp() {
-      driver = DriverManager.getInstance().getDriver();
+        String browser = System.getProperty("browser", "chrome");
+        driver = DriverManager.getInstance().getDriver(browser);
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);
         driver.get(authorizedUrl);
     }
