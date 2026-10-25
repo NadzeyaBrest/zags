@@ -21,7 +21,7 @@ import zags.pages.user.StatusPage;
 
 public class BirthApplicationSteps {
     private static final Logger log = LogManager.getLogger(BirthApplicationSteps.class);
-    private WebDriver driver = DriverManager.getInstance().getDriver();
+    private WebDriver driver = DriverManager.getInstance().getDriver(System.getProperty("browser"));
     private Application app;
     private MainPage mainPage;
     private ApplicantDataPage applicantDataPage;

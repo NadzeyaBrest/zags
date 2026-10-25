@@ -43,10 +43,24 @@
             <package name="zags.apiTests"/>
         </packages>
     </test>
-    <test name="Cucumber-сценарии">
+    <test name="Cucumber-сценарии (Chrome)">
+        <parameter name="browser" value="chrome"/>
         <classes>
             <class name="zags.cucumber.runners.BirthApplicationRunnerTest"/>
         </classes>
     </test>
 
+    <test name="Cucumber-сценарии (Firefox)">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="zags.cucumber.runners.BirthApplicationRunnerTest"/>
+        </classes>
+    </test>
+
+    <test name="Cucumber-сценарии (Edge)">
+        <parameter name="browser" value="edge"/>
+        <classes>
+            <class name="zags.cucumber.runners.BirthApplicationRunnerTest"/>
+        </classes>
+    </test>
 </suite>
