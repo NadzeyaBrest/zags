@@ -9,7 +9,7 @@ import org.openqa.selenium.WebDriver;
 import zags.core.DriverManager;
 
 public class CucumberHooks {
-    protected WebDriver driver;
+    public   static WebDriver driver;
     Dotenv dotenv = Dotenv.load();
     String username = dotenv.get("TEST_USERNAME");
     String password = dotenv.get("TEST_PASSWORD");
@@ -23,7 +23,6 @@ public class CucumberHooks {
         String authorizedUrl = String.format("https://%s:%s@%s", username, password, BASE_URL);
         driver.get(authorizedUrl);
     }
-
     @After ("@ui")
     public void tearDown() {
         DriverManager.getInstance().closeDriver();

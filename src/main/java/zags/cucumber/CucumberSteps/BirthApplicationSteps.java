@@ -1,4 +1,4 @@
-package zags.CucumberSteps;
+package zags.cucumber.CucumberSteps;
 
 
 import io.cucumber.java.en.And;
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import zags.core.DriverManager;
+import zags.cucumber.hooks.CucumberHooks;
 import zags.core.TestDataForCucumber;
 import zags.models.Application;
 import zags.pages.MainPage;
@@ -21,7 +21,7 @@ import zags.pages.user.StatusPage;
 
 public class BirthApplicationSteps {
     private static final Logger log = LogManager.getLogger(BirthApplicationSteps.class);
-    private WebDriver driver = DriverManager.getInstance().getDriver(System.getProperty("browser"));
+    private WebDriver driver = CucumberHooks.driver;
     private Application app;
     private MainPage mainPage;
     private ApplicantDataPage applicantDataPage;
