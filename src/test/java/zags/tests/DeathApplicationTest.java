@@ -5,10 +5,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Story;
+import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import zags.core.ApplicationRepository;
 import zags.data.TestData;
 import zags.models.Application;
 import zags.pages.MainPage;
@@ -18,8 +20,17 @@ import static zags.data.Constants.*;
 @Feature("Создание заявки на смерть")
 @Test(testName = "Создание заявки на регистрацию смерти (Пользователь)")
 public class DeathApplicationTest extends BaseTest {
+    private Integer createdAppId;
+
+    @AfterMethod(alwaysRun = true)
+    @Step("Очистка тестовых данных")
+    public void cleanup() {
+        if (createdAppId != null) {
+            ApplicationRepository.deleteById(createdAppId);
+            log.info("Тестовая заявка ID={} удалена из БД", createdAppId);
+        }
+    }
     @Test ( groups = {"user"},description = "Пользователь создаёт заявку на смерть")
-    @Story("Пользователь создаёт заявку на смерть")
     @Description("Проверяем создание заявки на смерть: заполнение всех форм и получение номера со статусом")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("177")
@@ -34,6 +45,7 @@ public class DeathApplicationTest extends BaseTest {
                 .deathServiceFillAndFinish(app);
 
         String number = deathStatusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(number.trim());
         String status = deathStatusPage.getStatus();
         SoftAssert softAssert =new SoftAssert();
         softAssert.assertNotNull(number, "Номер заявки не получен");

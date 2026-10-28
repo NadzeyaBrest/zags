@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
 import io.restassured.response.Response;
@@ -14,7 +15,6 @@ import org.testng.asserts.SoftAssert;
 import zags.api.AdminApi;
 import zags.api.models.AdminRequest;
 import zags.api.models.CreateAdminResponse;
-import zags.core.ApplicationRepository;
 import zags.core.StaffRepository;
 import zags.data.AdminBuilder;
 
@@ -22,16 +22,15 @@ import zags.data.AdminBuilder;
 @Feature("Создание администратора")
 @Test(testName = "API: Создание администратора")
 public class AdminCreationTest {
-
-    private Integer staffId;
+    private Integer staffid;
 
     @AfterMethod(alwaysRun = true)
+    @Step("Очистка тестовых данных")
     public void cleanup() {
-        if (staffId != null) {
-            ApplicationRepository.deleteById(staffId);
+        if (staffid != null) {
+            StaffRepository.deleteById(staffid);
         }
     }
-
     @Test(description = "Админ создаётся в системе", groups = {"API"})
     @Story("POST /sendAdminRequest")
     @Description("Проверяем, что создание админа возвращает staffid > 0")
@@ -41,15 +40,15 @@ public class AdminCreationTest {
         AdminRequest admin = AdminBuilder.admin();
         Response adminResponse = AdminApi.sendAdminRequest(admin);
         CreateAdminResponse response = adminResponse.jsonPath().getObject("data", CreateAdminResponse.class);
-        staffId = response.getStaffid();
+        staffid=response.getStaffid();
         SoftAssert soft = new SoftAssert();
         soft.assertNotNull(response, "response = null");
         soft.assertEquals(adminResponse.getStatusCode(),200);
-        soft.assertNotNull(response.getStaffid(),
+        soft.assertNotNull(staffid,
                 "staffid = null");
         soft.assertTrue(response.getStaffid() > 0,
-                "staffid = " + response.getStaffid());
-        soft.assertTrue(StaffRepository.existsById(response.getStaffid()),
+                "staffid = " + staffid);
+        soft.assertTrue(StaffRepository.existsById(staffid),
                 "Админ " + response.getStaffid() + " не найден в БД");
         soft.assertAll();
     }

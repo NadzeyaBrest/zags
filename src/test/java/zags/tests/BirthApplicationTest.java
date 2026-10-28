@@ -5,10 +5,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.Story;
+import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import zags.core.ApplicationRepository;
 import zags.data.TestData;
 import zags.models.Application;
 import zags.pages.MainPage;
@@ -19,9 +21,16 @@ import static zags.data.Constants.STATUS_IN_PROGRESS;
 @Feature("Создание заявки на рождение")
 @Test(testName = "Создание заявки на регистрацию рождения (Пользователь)")
 public class BirthApplicationTest extends BaseTest {
-
-    @Test( groups = {"user"}, description = "Пользователь создаёт заявку на рождение")
-    @Story("Пользователь создаёт заявку на рождение")
+    private Integer createdAppId;
+    @AfterMethod(alwaysRun = true)
+    @Step("Очистка тестовых данных")
+    public void cleanup() {
+        if (createdAppId != null) {
+            ApplicationRepository.deleteById(createdAppId);
+            log.info("Тестовая заявка ID={} удалена из БД", createdAppId);
+        }
+    }
+    @Test( groups = {"user"}, description = "Успешное создание заявки и получение статуса, типа")
     @Description("Проверяем, что пользователь может заполнить все формы заявки на рождение " +
             "и после завершения видит номер заявки и статус 'На рассмотрении'")
     @TmsLink("176")
@@ -37,6 +46,7 @@ public class BirthApplicationTest extends BaseTest {
                 .birthServiceFillAndFinish(app);
 
         String number = statusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(number.trim());
         String status = statusPage.getStatus();
 
         SoftAssert softAssert =new SoftAssert();

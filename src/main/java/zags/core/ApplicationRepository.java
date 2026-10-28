@@ -3,7 +3,6 @@ package zags.core;
 import io.qameta.allure.Step;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,20 +15,18 @@ public class ApplicationRepository {
     private static <T> T query(String sql, int id, RowMapper<T> mapper) {
         try (Connection conn = DatabaseConnection.get();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, id);
-
             try (ResultSet rs = ps.executeQuery()) {
                 return mapper.map(rs);
             }
         } catch (SQLException e) {
+            log.error("Ошибка запроса к БД, id={}", id, e);
             throw new RuntimeException("Ошибка запроса к БД, id=" + id, e);
         }
     }
     private static int update(String sql, int id) {
         try (Connection conn = DatabaseConnection.get();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, id);
             return ps.executeUpdate();
         } catch (SQLException e) {
@@ -51,24 +48,27 @@ public class ApplicationRepository {
 
     @Step("БД: проверить существование заявки {applicationId}")
     public static boolean existsById(int applicationId) {
-
+        log.info("Проверка заявки в БД, id={}", applicationId);
         String sql = "SELECT 1 FROM reg_office.applications WHERE applicationid = ?";
         return query(sql, applicationId, ApplicationRepository::existsMap);
     }
 
     @Step("БД: получить статус заявки {applicationId}")
     public static String getStatusById(int applicationId) {
+        log.info("Запрос статуса в БД, id={}", applicationId);
         String sql = "SELECT statusofapplication FROM reg_office.applications WHERE applicationid = ?";
         return query(sql, applicationId, ApplicationRepository::statusMap);
     }
 
     @Step("БД: получить тип заявки {applicationId}")
     public static String getKindById(int applicationId) {
+        log.info("Запрос типа в БД, id={}", applicationId);
         String sql = "SELECT kindofapplication FROM reg_office.applications WHERE applicationid = ?";
         return query(sql, applicationId, ApplicationRepository::kindMap);
     }
-
+    @Step("БД:удалить заявку {applicationId}")
     public static int deleteById(Integer applicationId) {
+        log.info("Удаление заявки в БД, id={}", applicationId);
         String sql = "DELETE FROM reg_office.applications WHERE applicationid = ?";
         return update(sql, applicationId);
     }

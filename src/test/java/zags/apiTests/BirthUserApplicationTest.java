@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
 import io.restassured.response.Response;
@@ -23,6 +24,7 @@ import zags.data.UserBuilder;
 public class BirthUserApplicationTest {
     private Integer appId;
     @AfterMethod(alwaysRun = true)
+    @Step("Очистка тестовых данных")
     public void cleanup() {
         if (appId != null) {
             ApplicationRepository.deleteById(appId);

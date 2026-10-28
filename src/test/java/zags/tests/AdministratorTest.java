@@ -20,6 +20,7 @@ import java.util.List;
 @Test(testName = "Проверка роли администратора")
 @Epic("Панель администратора")
 @Feature("Просмотр таблицы заявок")
+@Story("Работа с таблицей заявок")
 public class AdministratorTest extends BaseTest {
 
     AdminTablePage adminTable;
@@ -34,15 +35,13 @@ public class AdministratorTest extends BaseTest {
     }
 
     @Test( groups = {"admin"}, description= "Проверка роли администратора в шапке страницы")
-    @Story("Проверка роли администратора")
     @Description("Проверяем, что после выбора роли администратор в шапке отображается роль Администратор")
     public void checkAdministratorMode() {
         String mode = adminTable.getMode();
         Assert.assertEquals(mode, ADMIN_ROLE);
     }
 
-    @Test( groups = {"admin"},description = "Проверка заголовков таблицы по ТЗ") //  заголовки не соответствуют ТЗ
-    @Story("Проверка заголовков таблицы по ТЗ")
+    @Test( groups = {"admin"},description = "Проверка заголовков таблицы по ТЗ")
     @Description("Проверяем, что заголовки колонок таблицы соответствуют требованиям ТЗ")
     @TmsLink("156")
     public void checkAdminTableColumnsByRequirements() {

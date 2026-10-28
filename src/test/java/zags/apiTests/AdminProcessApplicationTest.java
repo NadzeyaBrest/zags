@@ -5,9 +5,11 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -20,6 +22,7 @@ import zags.api.models.CreateAdminResponse;
 import zags.api.models.UserCreateResponceApp;
 import zags.api.models.UserCreateRequest;
 import zags.core.ApplicationRepository;
+import zags.core.StaffRepository;
 import zags.data.AdminBuilder;
 import zags.data.UserBuilder;
 
@@ -30,6 +33,16 @@ public class AdminProcessApplicationTest {
     private Integer applId;
     private Integer staffid;
 
+    @AfterMethod(alwaysRun = true)
+    @Step("Очистка тестовых данных")
+    public void cleanup() {
+        if (applId != null) {
+            ApplicationRepository.deleteById(applId);
+        }
+        if (staffid != null) {
+            StaffRepository.deleteById(staffid);
+        }
+    }
     @BeforeMethod(alwaysRun = true)
     public void prepareApplicationId() {
         UserCreateRequest userRequest = UserBuilder.userWeddingRequest();
@@ -41,7 +54,7 @@ public class AdminProcessApplicationTest {
     }
 
     @Test(description = "Админ одобряет заявку", groups = {"API"})
-    @Story("Одобрение заявки")
+    @Story("POST /requestProcess")
     @Description("POST /requestProcess с action=approved меняет статус на 'approved'")
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("187")
@@ -64,7 +77,7 @@ public class AdminProcessApplicationTest {
     }
 
     @Test(description = "Админ отклоняет заявку", groups = {"API"})
-    @Story("Отклонение заявки")
+    @Story("POST /requestProcess")
     @Description("POST /requestProcess с action=rejected меняет статус на 'rejected'")
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("188")
