@@ -5,11 +5,14 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import zags.core.ApplicationRepository;
 import zags.data.TestData;
 import zags.models.Admin;
 import zags.models.Application;
@@ -22,14 +25,22 @@ import zags.pages.user.StatusPage;
 @Test(testName = "Проверка отображения заявок пользователя в таблице администратора")
 public class AdminCheckApplicationTest extends BaseTest {
     private MainPage mainPage;
-
+    private Integer createdAppId;
     @BeforeMethod(alwaysRun = true)
     public void init() {
         mainPage = new MainPage(driver);
     }
+    @AfterMethod(alwaysRun = true)
+    @Step("Очистка тестовых данных")
+    public void cleanup() {
+        if (createdAppId != null) {
+            ApplicationRepository.deleteById(createdAppId);
+            log.info("Тестовая заявка ID={} удалена из БД", createdAppId);
+        }
+    }
 
-    @Test(groups = {"crossRole"}, description = "Проверка заявки на рождение администратором")
-    @Story("Админ проверяет заявку на рождение")
+    @Test(groups = {"crossRole"}, description = "Заявка на рождение отображается с верным типом и статусом)")
+    @Story("Отображение заявок в таблице")
     @Description("Пользователь создаёт заявку на рождение, админ  проверяет, " +
             "что заявка появилась в таблице с корректным типом и статусом")
     @Severity(SeverityLevel.BLOCKER)
@@ -45,6 +56,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .birthServiceFillAndFinish(birthApp);
 
         String applicationNumberShowedUser = statusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(applicationNumberShowedUser.trim());
         String applicationStatusShowedUser = statusPage.getStatus();
         statusPage.clickStatusCloseButton();
         Admin admin = TestData.getAdmin();
@@ -52,8 +64,6 @@ public class AdminCheckApplicationTest extends BaseTest {
         AdminTablePage adminTable = new MainPage(driver)
                 .selectAdminMode()
                 .adminRegistrationFillAndNext(admin);
-
-
         String typeOfAppFromAdminTable = adminTable.getTypeById(applicationNumberShowedUser);
         String statusOfAppFromAdminTable = adminTable.getStatusById(applicationNumberShowedUser);
         SoftAssert softAssert = new SoftAssert();
@@ -64,8 +74,8 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(groups = {"crossRole"}, description = "Проверка заявки на рождение администратором")
-    @Story("Админ проверяет заявку на брак")
+    @Test(groups = {"crossRole"}, description = "Заявка на брак отображается с верным типом")
+    @Story("Отображение заявок в таблице")
     @Description("Пользователь создаёт заявку на брак, админ  проверяет её в таблице")
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("178")
@@ -79,6 +89,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .marriageCitizenFillAndNext(marriageApp)
                 .marriageServiceFillAndFinish(marriageApp);
         String applicationNumberShowedUser = marriageStatusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(applicationNumberShowedUser.trim());
         String applicationStatusShowedUser = marriageStatusPage.getStatus();
         marriageStatusPage.clickStatusCloseButton();
 
@@ -98,7 +109,7 @@ public class AdminCheckApplicationTest extends BaseTest {
     }
 
     @Test(groups = {"crossRole"}, description = "Проверка заявки на смерть администратором")
-    @Story("Админ проверяет заявку на смерть")
+    @Story("Отображение заявок в таблице")
     @Description("Пользователь создаёт заявку на смерть, админ проверяет её в таблице")
     @Severity(SeverityLevel.BLOCKER)
     @TmsLink("180")
@@ -112,6 +123,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .deathCitizenFillAndNext(deathApp)
                 .deathServiceFillAndFinish(deathApp);
         String applicationNumberShowedUser = deathStatusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(applicationNumberShowedUser.trim());
         String applicationStatusShowedUser = deathStatusPage.getStatus();
         deathStatusPage.clickStatusCloseButton();
 
@@ -132,7 +144,7 @@ public class AdminCheckApplicationTest extends BaseTest {
     }
 
     @Test(groups = {"crossRole"}, description = "Одобрение только что созданной заявки")
-    @Story("Админ одобряет заявку")
+    @Story("Обработка заявок админом")
     @Description("Пользователь создаёт заявку, админ находит её по ID, кликает 'Палец вверх' и проверяет новый статус")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("161")
@@ -145,6 +157,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .deathCitizenFillAndNext(deathApp)
                 .deathServiceFillAndFinish(deathApp);
         String appNumber = deathStatusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(appNumber.trim());
         log.info("Создана новая заявка с номером: {}", appNumber);
         deathStatusPage.clickStatusCloseButton();
 
@@ -163,7 +176,7 @@ public class AdminCheckApplicationTest extends BaseTest {
     }
 
     @Test(groups = {"crossRole"}, description = "Отклонение только что созданной заявки")
-    @Story("Админ отклоняет заявку")
+    @Story("Обработка заявок админом")
     @Description("Пользователь создаёт заявку, админ находит её по ID, кликает 'Палец вниз' и проверяет новый статус")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("162")
@@ -177,6 +190,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .marriageServiceFillAndFinish(marriageApp);
 
         String appNumber = statusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(appNumber.trim());
         log.info("Создана новая заявка с номером: {}", appNumber);
         statusPage.clickStatusCloseButton();
         Admin admin = TestData.getAdmin();
@@ -192,8 +206,8 @@ public class AdminCheckApplicationTest extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test(groups = {"crossRole"}, description = "Проверка появления новой заявки в таблице админа после нажатия 'Обновить'")
-    @Story("Обновление таблицы администратора")
+    @Test(groups = {"crossRole"}, description = "Появление новой заявки в таблице админа после нажатия 'Обновить'")
+    @Story("Обновление данных в таблице")
     @Description("Админ открывает таблицу, возвращается на главную, пользователь создает заявку, админ снова открывает таблицу, жмет 'Обновить' и видит новую заявку.")
     @Severity(SeverityLevel.CRITICAL)
     @TmsLink("157")
@@ -212,6 +226,7 @@ public class AdminCheckApplicationTest extends BaseTest {
                 .marriageServiceFillAndFinish(marriageApp);
 
         String appNumber = statusPage.getApplicationNumber();
+        createdAppId = Integer.parseInt(appNumber.trim());
         log.info("Пользователь создал заявку: {}", appNumber);
         MainPage mainPageForAdmin = statusPage.clickStatusCloseButton();
         AdminTablePage adminTableRefreshed = mainPageForAdmin
